@@ -8,7 +8,7 @@ import { theme } from "../src/theme";
 export default function RootLayout() {
   return (
     <FavoritesProvider>
-      <StatusBar barStyle="light-content" backgroundColor={theme.background} />
+      <StatusBar barStyle="light-content" />
       <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: theme.background } }} />
     </FavoritesProvider>
   );
