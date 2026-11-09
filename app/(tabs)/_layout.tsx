@@ -1,10 +1,10 @@
 import React from "react";
 import { Tabs } from "expo-router";
-import { Text } from "react-native";
+import { Text, type ColorValue } from "react-native";
 import { theme } from "../../src/theme";
 
-function TabIcon({ symbol, color }: { symbol: string; color: string }) {
-  return <Text style={{ color, fontWeight: "800", fontSize: 23 }}>{symbol}</Text>;
+function TabIcon({ symbol, color }: { symbol: string; color: ColorValue | null | undefined }) {
+  return <Text style={{ color: color ?? theme.muted, fontWeight: "800", fontSize: 23 }}>{symbol}</Text>;
 }
 
 export default function TabsLayout() {
