@@ -1,0 +1,22 @@
+{
+  "expo": {
+    "name": "Buscador",
+    "slug": "buscador",
+    "scheme": "buscador",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "dark",
+    "backgroundColor": "#08090C",
+    "plugins": [
+      "expo-router"
+    ],
+    "experiments": {
+      "typedRoutes": true
+    },
+    "android": {
+      "package": "com.flaviodelacruz.buscador",
+      "edgeToEdgeEnabled": true
+    },
+    "newArchEnabled": true
+  }
+}
