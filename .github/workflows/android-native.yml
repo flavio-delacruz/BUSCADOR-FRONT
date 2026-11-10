@@ -36,6 +36,18 @@ jobs:
         run: |
           grep -q 'android.enableMinifyInReleaseBuilds=false' android/gradle.properties
           grep -q 'android.enableShrinkResourcesInReleaseBuilds=false' android/gradle.properties
+      - name: Assert runtime module registration in Expo generated provider
+        run: |
+          cd android
+          chmod +x gradlew
+          ./gradlew --no-daemon :expo:generateExpoModulesPackageList
+          echo "Generated provider references:"
+          find . -type f -name 'ExpoModulesPackageList.kt' -print -exec grep -n -C 4 'BuscadorNotificationsModule' {} \;
+          found=$(find . -type f -name 'ExpoModulesPackageList.kt' -exec grep -l 'BuscadorNotificationsModule' {} +)
+          if [ -z "$found" ]; then
+            echo "ERROR: BuscadorNotificationsModule was compiled but not registered in ExpoModulesPackageList"
+            exit 1
+          fi
       - name: Build actual release APK
         run: |
           cd android
