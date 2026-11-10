@@ -17,6 +17,19 @@ class BuscadorNotificationsModule : Module() {
     return enabled.split(":").any { ComponentName.unflattenFromString(it) == expected }
   }
 
+  private fun isDeclared(): Boolean {
+    val ctx = context()
+    return try {
+      ctx.packageManager.getServiceInfo(
+        ComponentName(ctx, BuscadorNotificationListener::class.java),
+        0
+      )
+      true
+    } catch (_: Exception) {
+      false
+    }
+  }
+
   override fun definition() = ModuleDefinition {
     Name("BuscadorNotifications")
 
@@ -24,6 +37,9 @@ class BuscadorNotificationsModule : Module() {
       val context = context()
       mapOf(
         "accessGranted" to accessGranted(),
+        "serviceRegistered" to isDeclared(),
+        "serviceConnected" to BuscadorNotificationListener.connected,
+        "nativeBuild" to "1.1.0-archive",
         "recordingEnabled" to NotificationArchiveStore.isEnabled(context),
         "sources" to NotificationArchiveStore.selectedPackages(context).sorted(),
         "recordsCount" to NotificationArchiveStore.getRecords(context).size
@@ -47,6 +63,13 @@ class BuscadorNotificationsModule : Module() {
         throw IllegalStateException("Selecciona al menos una red social")
       }
       NotificationArchiveStore.setEnabled(context, enabled)
+      if (enabled && !BuscadorNotificationListener.connected &&
+          android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+        // Ask the system to reconnect when a granted listener was disconnected.
+        android.service.notification.NotificationListenerService.requestRebind(
+          ComponentName(context, BuscadorNotificationListener::class.java)
+        )
+      }
       true
     }
 

@@ -9,6 +9,26 @@ import android.service.notification.StatusBarNotification
  * Only supported source packages are considered; no network or telemetry.
  */
 class BuscadorNotificationListener : NotificationListenerService() {
+  companion object {
+    @Volatile var connected = false
+      private set
+  }
+
+  override fun onListenerConnected() {
+    super.onListenerConnected()
+    connected = true
+  }
+
+  override fun onListenerDisconnected() {
+    connected = false
+    super.onListenerDisconnected()
+  }
+
+  override fun onDestroy() {
+    connected = false
+    super.onDestroy()
+  }
+
   override fun onNotificationPosted(sbn: StatusBarNotification?) {
     if (sbn == null || !NotificationArchiveStore.isEnabled(this)) return
     if (!NotificationArchiveStore.selectedPackages(this).contains(sbn.packageName)) return

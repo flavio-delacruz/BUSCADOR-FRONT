@@ -1,0 +1,51 @@
+name: Android native verification
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "modules/**"
+      - "app.json"
+      - "eas.json"
+      - "assets/**"
+      - ".github/workflows/android-native.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  native:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+      - name: Verify splash artwork
+        run: |
+          file assets/buscador-icon.png assets/buscador-splash.png
+          test -s assets/buscador-icon.png
+          test -s assets/buscador-splash.png
+      - name: Generate native Android project
+        run: CI=1 npx expo prebuild --platform android --no-install
+      - name: Compile notification listener and merge Android manifest
+        run: |
+          cd android
+          chmod +x gradlew
+          ./gradlew --no-daemon --stacktrace :buscador-notifications:compileDebugKotlin :app:processDebugMainManifest
+      - name: Verify listener exists in generated merged manifest
+        run: |
+          if grep -rl "BuscadorNotificationListener" android/app/build/intermediates/merged_manifests android/app/build/intermediates/merged_manifest; then
+            echo "Verified: notification listener declared in merged Android manifest"
+          else
+            echo "ERROR: notification listener not found in Android merged manifest"
+            exit 1
+          fi
