@@ -21,6 +21,12 @@ jobs:
       - name: Verify Android local module autolinking
         run: |
           npx expo-modules-autolinking resolve --platform android > /tmp/buscador-android-modules.json
-          node -e "const j=require('/tmp/buscador-android-modules.json'); const s=JSON.stringify(j); if(!s.includes('BuscadorNotificationsModule')){console.error('ERROR: BuscadorNotificationsModule was not autolinked'); process.exit(1)} console.log('Android notification module detected by Expo Autolinking')"
+          if grep -q 'BuscadorNotificationsModule' /tmp/buscador-android-modules.json; then
+            echo "Android notification module detected by Expo Autolinking"
+          else
+            echo "ERROR: BuscadorNotificationsModule was not autolinked"
+            head -c 3000 /tmp/buscador-android-modules.json
+            exit 1
+          fi
       - name: Check types
         run: npm run typecheck
