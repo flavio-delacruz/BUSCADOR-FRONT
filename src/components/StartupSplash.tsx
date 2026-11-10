@@ -55,7 +55,7 @@ export function StartupSplash() {
       pointerEvents="none"
       accessibilityElementsHidden
       importantForAccessibility="no-hide-descendants"
-      style={[StyleSheet.absoluteFillObject, styles.overlay, { opacity }]}
+      style={[StyleSheet.absoluteFill, styles.overlay, { opacity }]}
     >
       <Animated.View style={{ transform: [{ scale: logoScale }] }}>
         <Brand size={110} />
