@@ -1,42 +1,72 @@
 import React from "react";
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { useRouter } from "expo-router";
 import { Screen } from "../../src/components/Screen";
+import { Brand } from "../../src/components/Brand";
 import { theme } from "../../src/theme";
 
-function Setting({ title, info }: { title: string; info: string }) {
-  return <View style={styles.item}><Text style={styles.itemTitle}>{title}</Text><Text style={styles.itemInfo}>{info}</Text></View>;
+function InfoRow({ label, value }: { label: string; value: string }) {
+  return <View style={styles.infoRow}><Text style={styles.infoLabel}>{label}</Text><Text style={styles.infoValue}>{value}</Text></View>;
 }
 
 export default function Settings() {
+  const router = useRouter();
   return (
-    <Screen title="Ajustes" subtitle="Personaliza tu experiencia">
-      <ScrollView contentContainerStyle={styles.content}>
-        <Text style={styles.heading}>PREFERENCIAS</Text>
-        <View style={styles.card}>
-          <Setting title="Tema visual" info="Oscuro · Rojo Buscador" />
-          <View style={styles.divider} />
-          <Setting title="Contenido" info="Catálogo de demostración" />
+    <Screen title="Mi espacio" subtitle="LA EXPERIENCIA BUSCADOR">
+      <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
+        <View style={styles.identity}>
+          <Brand size={70} />
+          <View style={{ flex: 1 }}><Text style={styles.name}>Buscador</Text><Text style={styles.tagline}>Una nueva forma de descubrir.</Text><Text style={styles.version}>EDICIÓN PREVIEW  ·  0.2.0</Text></View>
         </View>
-        <Text style={styles.heading}>PRIVACIDAD Y TRANSPARENCIA</Text>
-        <View style={styles.card}>
-          <Setting title="Permisos especiales" info="Ninguno solicitado en esta versión." />
+
+        <Text style={styles.sectionTitle}>Tu experiencia</Text>
+        <Pressable onPress={() => router.push("/briefing")} style={styles.linkCard} accessibilityRole="button">
+          <View style={styles.iconBox}><Text style={styles.icon}>✳</Text></View><View style={{ flex: 1 }}><Text style={styles.linkTitle}>Briefing editorial</Text><Text style={styles.linkSub}>Tres historias para comenzar</Text></View><Text style={styles.linkArrow}>↗</Text>
+        </Pressable>
+        <Pressable onPress={() => router.push("/(tabs)/radar")} style={styles.linkCard} accessibilityRole="button">
+          <View style={styles.iconBox}><Text style={styles.icon}>◎</Text></View><View style={{ flex: 1 }}><Text style={styles.linkTitle}>Mapa Radar</Text><Text style={styles.linkSub}>Explora categorías e intereses</Text></View><Text style={styles.linkArrow}>↗</Text>
+        </Pressable>
+
+        <Text style={styles.sectionTitle}>Sobre esta versión</Text>
+        <View style={styles.infoCard}>
+          <InfoRow label="Estilo visual" value="Oscuro / Rojo editorial" />
           <View style={styles.divider} />
-          <Setting title="Datos personales" info="No se leen notificaciones, mensajes ni pulsaciones del teclado." />
+          <InfoRow label="Historias" value="Catálogo demostrativo" />
           <View style={styles.divider} />
-          <Setting title="Conexión" info="La búsqueda funciona localmente, sin enviarse al servidor." />
+          <InfoRow label="Conexión" value="Contenido local, sin noticias en vivo" />
         </View>
-        <Text style={styles.footer}>Buscador · Versión 0.1.0 · Proyecto académico</Text>
+
+        <Text style={styles.sectionTitle}>Privacidad y transparencia</Text>
+        <View style={styles.infoCard}>
+          <InfoRow label="Notificaciones de otras apps" value="No se accede" />
+          <View style={styles.divider} />
+          <InfoRow label="Escritura en otras apps" value="No se registra" />
+          <View style={styles.divider} />
+          <InfoRow label="Datos de cuenta" value="Sin inicio de sesión en esta versión" />
+        </View>
+
+        <Text style={styles.footer}>BUSCADOR / HECHO PARA DESCUBRIR{"\n"}Prototipo académico · Datos de muestra</Text>
       </ScrollView>
     </Screen>
   );
 }
 const styles = StyleSheet.create({
-  content: { paddingHorizontal: 22, paddingBottom: 40 },
-  heading: { color: theme.red, fontSize: 11, fontWeight: "800", letterSpacing: 2, marginTop: 13, marginBottom: 14 },
-  card: { backgroundColor: theme.card, borderColor: theme.border, borderWidth: 1, borderRadius: 20, paddingHorizontal: 18, marginBottom: 24 },
-  item: { paddingVertical: 19 },
-  itemTitle: { color: theme.white, fontWeight: "800", fontSize: 15, marginBottom: 6 },
-  itemInfo: { color: theme.muted, fontSize: 12, lineHeight: 18 },
+  content: { paddingHorizontal: 20, paddingBottom: 42 },
+  identity: { borderRadius: 23, backgroundColor: "#1F1A29", borderColor: "#50324C", borderWidth: 1, padding: 18, marginTop: 8, marginBottom: 28, flexDirection: "row", gap: 17, alignItems: "center" },
+  name: { color: theme.white, fontSize: 23, fontWeight: "900", letterSpacing: -0.6 },
+  tagline: { color: theme.muted, fontSize: 11, marginTop: 5 },
+  version: { color: theme.red, fontSize: 10, fontWeight: "900", letterSpacing: 1.2, marginTop: 13 },
+  sectionTitle: { color: theme.white, fontSize: 20, fontWeight: "900", marginBottom: 14, marginTop: 5 },
+  linkCard: { backgroundColor: theme.card, borderRadius: 17, borderWidth: 1, borderColor: theme.border, flexDirection: "row", alignItems: "center", gap: 13, padding: 14, marginBottom: 11 },
+  iconBox: { backgroundColor: "#382338", width: 45, height: 45, borderRadius: 13, alignItems: "center", justifyContent: "center" },
+  icon: { color: theme.lilac, fontSize: 25 },
+  linkTitle: { color: theme.white, fontSize: 14, fontWeight: "900" },
+  linkSub: { color: theme.soft, marginTop: 5, fontSize: 11 },
+  linkArrow: { color: theme.red, fontSize: 21 },
+  infoCard: { backgroundColor: theme.card, borderColor: theme.border, borderWidth: 1, borderRadius: 21, paddingHorizontal: 18, marginBottom: 27 },
+  infoRow: { paddingVertical: 18 },
+  infoLabel: { color: theme.white, fontSize: 12, fontWeight: "900" },
+  infoValue: { color: theme.muted, fontSize: 11, lineHeight: 17, marginTop: 6 },
   divider: { backgroundColor: theme.border, height: 1 },
-  footer: { color: theme.soft, fontSize: 11, textAlign: "center", marginTop: 8 }
+  footer: { color: theme.soft, textAlign: "center", marginTop: 5, fontSize: 10, lineHeight: 21, letterSpacing: 1 }
 });

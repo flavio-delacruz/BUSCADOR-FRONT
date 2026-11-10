@@ -1,45 +1,43 @@
 # BUSCADOR-FRONT
 
-**Buscador**, aplicación Android de demostración para explorar contenido, filtrarlo y guardar favoritos. React Native + TypeScript + Expo Router.
+**Buscador · Editorial Preview** — explorador visual de ideas y noticias de muestra para Android.
+
+Construido con React Native, Expo Router y TypeScript. La interfaz actual no solicita permisos especiales de Android ni accede a notificaciones o texto escrito en otras aplicaciones.
 
 ## Pantallas
 
-- Inicio con identidad visual negra y roja
-- Buscar con filtrado por texto y categorías
-- Guardados (memoria de sesión)
-- Ajustes con información transparente de privacidad
-- Detalle de cada recurso
+- **Hoy:** portada editorial, historia destacada, temas y briefing.
+- **Radar:** exploración de intereses y puntuaciones **simuladas** con representación visual ilustrativa.
+- **Explorar:** búsqueda local por palabras y categorías.
+- **Guardados:** colección de lecturas de la sesión.
+- **Ajustes:** identidad, enlaces de exploración y transparencia.
+- **Detalle:** lectura de los artículos de muestra.
+- **Briefing:** selección de tres historias.
 
-El catálogo de esta fase es ficticio, local y no contiene información privada. **No hay un lector de notificaciones ni teclado implementado**.
+Todas las historias son **contenido editorial ilustrativo, no noticias actuales**. No hay scraping ni API de noticias implementada. El siguiente paso podría ser una fuente pública de noticias con atribución y fechas.
 
-## Abrir en Termux
+## Probar con la APK de desarrollo ya instalada
+
+Desde Termux:
 
 ```bash
-pkg install nodejs-lts git -y
-git clone https://github.com/flavio-delacruz/BUSCADOR-FRONT.git
-cd BUSCADOR-FRONT
-npm install
-npx expo install --fix
+cd ~/BUSCADOR/frontend
+git pull --ff-only
 npm run typecheck
-npx expo start --tunnel
+npx expo start --dev-client --localhost -c
 ```
 
-Para crear una APK Android sin Android Studio local, inicia sesión en Expo y utiliza EAS Build:
+En la aplicación instalada, conecta a `http://127.0.0.1:8081`. Los cambios de JavaScript/TypeScript no requieren reconstruir la APK.
+
+## Desarrollo nuevo
 
 ```bash
-npx expo install expo-dev-client
-npx eas-cli@latest login
-npx eas-cli@latest build:configure
-npx eas-cli@latest build -p android --profile preview
+npm install --no-audit --no-fund
+npm run typecheck
 ```
 
-La build aún no ha sido ejecutada ni verificada en un dispositivo.
+Dependencias nativas existentes: no se incorporaron nuevas librerías nativas en el rediseño editorial.
 
-## Próximas fases
+## Privacidad
 
-- Persistencia local de favoritos
-- Integración opcional con la API Buscador
-- Animación de la marca y assets definitivos
-- Pruebas Android reales y accesibilidad
-
-Antes de cualquier uso de permisos especiales de Android se requerirán pantallas de consentimiento claro, control de revocación y justificación de los datos accedidos.
+No se capturan mensajes ni pulsaciones de teclado. Si en una fase futura se construyen funciones que requieren acceso a información privada, deberán explicarse claramente, solicitar permiso explícito y permitir al usuario desactivarlas y gestionar sus datos.
