@@ -34,7 +34,7 @@ export default function Radar() {
           {radarSignals.map((signal, i) => (
             <Pressable key={signal.title} onPress={() => router.push({ pathname: "/detail/[id]", params: { id: signal.articleId } })} style={styles.signal} accessibilityRole="button" accessibilityLabel={"Explorar " + signal.title}>
               <View style={styles.signalTop}><Text style={styles.index}>0{i + 1}</Text><Text style={styles.signalTitle}>{signal.title}</Text><Text style={styles.score}>{signal.score}</Text></View>
-              <View style={styles.track}><View style={[styles.fill, { width: `${signal.score}%`, backgroundColor: signal.tint }]} /></View>
+              <View style={styles.track}><View style={[styles.fill, { width: `${signal.score}%` as `${number}%`, backgroundColor: signal.tint }]} /></View>
               <Text style={styles.signalCategory}>{signal.category.toUpperCase()}  ·  VER HISTORIA  ↗</Text>
             </Pressable>
           ))}
