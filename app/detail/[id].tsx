@@ -3,6 +3,7 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Artwork } from "../../src/components/Artwork";
+import { Reveal } from "../../src/components/Reveal";
 import { catalog } from "../../src/data/catalog";
 import { useFavorites } from "../../src/state/FavoritesContext";
 import { theme } from "../../src/theme";
@@ -16,7 +17,7 @@ export default function Detail() {
     <SafeAreaView edges={["top"]} style={styles.screen}>
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         <Pressable accessibilityRole="button" accessibilityLabel="Regresar" onPress={() => router.back()} style={styles.back}><Text style={styles.backText}>‹   VOLVER</Text></Pressable>
-        {item ? <>
+        {item ? <Reveal delay={50}>
           <View style={styles.topRow}><Text style={styles.kicker}>{item.kicker}</Text><Text style={styles.demo}>LECTURA DEMO</Text></View>
           <Text style={styles.title}>{item.title}</Text>
           <Text style={styles.subtitle}>{item.description}</Text>
@@ -31,7 +32,7 @@ export default function Detail() {
           {item.body.map((paragraph, index) => <Text key={index} style={styles.paragraph}>{paragraph}</Text>)}
           <View style={styles.tags}>{item.tags.map(tag => <View key={tag} style={styles.tag}><Text style={styles.tagText}>#{tag}</Text></View>)}</View>
           <View style={styles.end}><Text style={styles.endSymbol}>B.</Text><Text style={styles.endText}>El conocimiento comienza con una pregunta.</Text></View>
-        </> : <View style={styles.notFound}><Text style={styles.notFoundText}>No encontramos esta historia.</Text><Pressable onPress={() => router.back()}><Text style={styles.backText}>Volver</Text></Pressable></View>}
+        </Reveal> : <View style={styles.notFound}><Text style={styles.notFoundText}>No encontramos esta historia.</Text><Pressable onPress={() => router.back()}><Text style={styles.backText}>Volver</Text></Pressable></View>}
       </ScrollView>
     </SafeAreaView>
   );

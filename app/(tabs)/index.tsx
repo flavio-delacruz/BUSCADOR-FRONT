@@ -1,19 +1,16 @@
-import React, { useEffect, useRef } from "react";
-import { Animated, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import React from "react";
+import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { useRouter } from "expo-router";
 import { Screen } from "../../src/components/Screen";
 import { Artwork } from "../../src/components/Artwork";
 import { CatalogCard } from "../../src/components/CatalogCard";
+import { Reveal } from "../../src/components/Reveal";
 import { catalog, categories, type Category } from "../../src/data/catalog";
 import { theme } from "../../src/theme";
 
 export default function Home() {
   const router = useRouter();
-  const intro = useRef(new Animated.Value(0)).current;
   const lead = catalog[0];
-  useEffect(() => {
-    Animated.timing(intro, { toValue: 1, duration: 550, useNativeDriver: true }).start();
-  }, [intro]);
 
   function openCategory(category: Category) {
     router.push({ pathname: "/(tabs)/search", params: { category } });
@@ -22,7 +19,7 @@ export default function Home() {
   return (
     <Screen title="BUSCADOR" subtitle="IDEAS · CONTEXTO · DESCUBRIMIENTO">
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
-        <Animated.View style={{ opacity: intro, transform: [{ translateY: intro.interpolate({ inputRange: [0, 1], outputRange: [20, 0] }) }] }}>
+        <Reveal delay={40} distance={20}>
           <View style={styles.introRow}>
             <View>
               <Text style={styles.kicker}>TU EDICIÓN PERSONAL</Text>
@@ -44,23 +41,27 @@ export default function Home() {
               <View style={styles.featureFooter}><Text style={styles.featureLink}>EXPLORAR HISTORIA</Text><Text style={styles.arrow}>↗</Text></View>
             </View>
           </Pressable>
-        </Animated.View>
+        </Reveal>
 
+        <Reveal delay={180}>
         <Pressable style={styles.briefing} onPress={() => router.push("/briefing")} accessibilityRole="button" accessibilityLabel="Abrir briefing de tres historias">
           <View style={styles.briefIcon}><Text style={styles.briefSymbol}>✳</Text></View>
           <View style={{ flex: 1 }}><Text style={styles.briefSmall}>TU DOSIS DE CONTEXTO</Text><Text style={styles.briefTitle}>El briefing de hoy</Text><Text style={styles.briefSub}>Tres historias para descubrir</Text></View>
           <Text style={styles.briefArrow}>↗</Text>
         </Pressable>
+        </Reveal>
 
+        <Reveal delay={240}>
         <View style={styles.sectionTitleRow}><Text style={styles.sectionTitle}>Explora por interés</Text><Text style={styles.sectionMicro}>05 TEMAS</Text></View>
         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.topics}>
           {categories.map((category, index) => <Pressable key={category} style={[styles.topic, index === 0 && styles.topicActive]} onPress={() => openCategory(category)}>
             <Text style={[styles.topicText, index === 0 && styles.topicTextActive]}>{category}  ↗</Text>
           </Pressable>)}
         </ScrollView>
+        </Reveal>
 
         <View style={styles.sectionTitleRow}><Text style={styles.sectionTitle}>Más para descubrir</Text><Text style={styles.sectionMicro}>SELECCIÓN</Text></View>
-        {catalog.slice(1, 5).map(item => <CatalogCard key={item.id} item={item} />)}
+        {catalog.slice(1, 5).map((item, index) => <Reveal key={item.id} delay={280 + index * 70}><CatalogCard item={item} /></Reveal>)}
         <View style={styles.disclaimer}><Text style={styles.disclaimerText}>◌  Vista previa editorial. Las historias y tendencias son ejemplos, no noticias en tiempo real.</Text></View>
       </ScrollView>
     </Screen>

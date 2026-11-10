@@ -3,6 +3,7 @@ import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { useRouter } from "expo-router";
 import { Screen } from "../../src/components/Screen";
 import { CatalogCard } from "../../src/components/CatalogCard";
+import { Reveal } from "../../src/components/Reveal";
 import { catalog } from "../../src/data/catalog";
 import { useFavorites } from "../../src/state/FavoritesContext";
 import { theme } from "../../src/theme";
@@ -14,6 +15,7 @@ export default function Saved() {
   return (
     <Screen title="Mi biblioteca" subtitle="LEE MÁS TARDE · TU SELECCIÓN">
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
+        <Reveal delay={40}>
         <View style={styles.hero}>
           <Text style={styles.eyebrow}>TU COLECCIÓN PERSONAL</Text>
           <Text style={styles.count}>{String(items.length).padStart(2, "0")}</Text>
@@ -21,8 +23,9 @@ export default function Saved() {
           <View style={styles.arc} />
           <Text style={styles.heroFoot}>Aquello que te inspira merece un segundo vistazo.</Text>
         </View>
+        </Reveal>
         <View style={styles.header}><Text style={styles.headerTitle}>Tu selección</Text><Text style={styles.headerCount}>{items.length} ELEMENTOS</Text></View>
-        {items.map(item => <CatalogCard key={item.id} item={item} />)}
+        {items.map((item, index) => <Reveal key={item.id} delay={100 + index * 65}><CatalogCard item={item} /></Reveal>)}
         {items.length === 0 ? <View style={styles.empty}>
           <Text style={styles.emptySymbol}>♡</Text>
           <Text style={styles.emptyTitle}>Aquí empiezan las buenas ideas.</Text>

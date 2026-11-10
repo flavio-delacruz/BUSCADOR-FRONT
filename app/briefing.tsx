@@ -3,6 +3,7 @@ import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Artwork } from "../src/components/Artwork";
+import { Reveal } from "../src/components/Reveal";
 import { briefIds, catalog } from "../src/data/catalog";
 import { theme } from "../src/theme";
 
@@ -13,17 +14,21 @@ export default function Briefing() {
     <SafeAreaView edges={["top"]} style={styles.screen}>
       <ScrollView contentContainerStyle={styles.content}>
         <Pressable onPress={() => router.back()} accessibilityRole="button" accessibilityLabel="Regresar" style={styles.back}><Text style={styles.backText}>‹  VOLVER A HOY</Text></Pressable>
+        <Reveal delay={40}>
         <View style={styles.label}><Text style={styles.labelText}>B / BRIEFING</Text></View>
         <Text style={styles.headline}>Tres ideas.{"\n"}<Text style={{ color: theme.red }}>Una nueva mirada.</Text></Text>
         <Text style={styles.deck}>Un recorrido corto por temas que vale la pena conocer. Selecciona una historia para leerla completa.</Text>
         <View style={styles.divider} />
+        </Reveal>
         {items.map((item, index) => (
-          <Pressable key={item.id} onPress={() => router.push({ pathname: "/detail/[id]", params: { id: item.id } })} style={styles.story}>
+          <Reveal key={item.id} delay={150 + index * 95}>
+          <Pressable onPress={() => router.push({ pathname: "/detail/[id]", params: { id: item.id } })} style={styles.story}>
             <View style={styles.storyTop}><Text style={styles.number}>0{index + 1}</Text><Text style={styles.category}>{item.category.toUpperCase()}  ·  {item.minutes} MIN</Text><Text style={styles.open}>↗</Text></View>
             <Artwork accent={item.accent} icon={item.icon} height={110} number={String(index + 1).padStart(2, "0")} compact={false} />
             <Text style={styles.title}>{item.title}</Text>
             <Text style={styles.description}>{item.description}</Text>
           </Pressable>
+          </Reveal>
         ))}
         <Text style={styles.footer}>Contenido editorial de demostración. No son noticias verificadas en tiempo real.</Text>
       </ScrollView>

@@ -3,6 +3,7 @@ import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-
 import { useLocalSearchParams } from "expo-router";
 import { Screen } from "../../src/components/Screen";
 import { CatalogCard } from "../../src/components/CatalogCard";
+import { Reveal } from "../../src/components/Reveal";
 import { catalog, categories, type Category } from "../../src/data/catalog";
 import { theme } from "../../src/theme";
 
@@ -29,6 +30,7 @@ export default function Search() {
   return (
     <Screen title="Explorar" subtitle="BUSCA · DESCUBRE · GUARDA">
       <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
+        <Reveal delay={50}>
         <Text style={styles.eyebrow}>BUSCADOR / EXPLORAR</Text>
         <Text style={styles.heading}>Toda gran idea{"\n"}<Text style={{ color: theme.red }}>empieza aquí.</Text></Text>
         <Text style={styles.deck}>Encuentra nuevas perspectivas sobre los temas que te interesan.</Text>
@@ -39,6 +41,7 @@ export default function Search() {
           {query.length > 0 ? <Pressable accessibilityRole="button" accessibilityLabel="Limpiar búsqueda" onPress={() => setQuery("")}><Text style={styles.clear}>×</Text></Pressable> : null}
         </View>
 
+        </Reveal>
         {query.length === 0 ? <View style={styles.suggestBlock}>
           <Text style={styles.suggestTitle}>BÚSQUEDAS PARA EMPEZAR</Text>
           <View style={styles.suggestRow}>
@@ -46,6 +49,7 @@ export default function Search() {
           </View>
         </View> : null}
 
+        <Reveal delay={170}>
         <Text style={styles.filtersLabel}>FILTRAR POR UNIVERSO</Text>
         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.filters}>
           {(["Todo", ...categories] as const).map(value => (
@@ -55,8 +59,9 @@ export default function Search() {
           ))}
         </ScrollView>
 
+        </Reveal>
         <View style={styles.resultHead}><Text style={styles.resultTitle}>Historias</Text><Text style={styles.resultCount}>{results.length} RESULTADOS</Text></View>
-        {results.map(item => <CatalogCard key={item.id} item={item} />)}
+        {results.map((item, index) => <Reveal key={item.id} delay={Math.min(240 + index * 55, 540)}><CatalogCard item={item} /></Reveal>)}
         {results.length === 0 ? <View style={styles.empty}><Text style={styles.emptyGlyph}>⌕</Text><Text style={styles.emptyTitle}>Sin coincidencias</Text><Text style={styles.emptyCopy}>Prueba con otra palabra o cambia el filtro.</Text><Pressable style={styles.reset} onPress={() => { setQuery(""); setCategory("Todo"); }}><Text style={styles.resetText}>REINICIAR BÚSQUEDA  ↗</Text></Pressable></View> : null}
         <Text style={styles.note}>Catálogo de demostración. Aún no hay noticias en vivo ni búsqueda en internet.</Text>
       </ScrollView>

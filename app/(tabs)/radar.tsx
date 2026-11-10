@@ -3,6 +3,8 @@ import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { useRouter } from "expo-router";
 import { Screen } from "../../src/components/Screen";
 import { CatalogCard } from "../../src/components/CatalogCard";
+import { Reveal } from "../../src/components/Reveal";
+import { RadarPulse } from "../../src/components/RadarPulse";
 import { catalog, radarSignals } from "../../src/data/catalog";
 import { theme } from "../../src/theme";
 
@@ -11,13 +13,17 @@ export default function Radar() {
   return (
     <Screen title="Radar" subtitle="MAPA DE IDEAS · VERSIÓN DEMO">
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
+        <Reveal delay={40}>
         <Text style={styles.eyebrow}>SEÑALES PARA EXPLORAR</Text>
         <Text style={styles.headline}>Detecta temas.{"\n"}<Text style={{ color: theme.red }}>Conecta ideas.</Text></Text>
         <Text style={styles.intro}>Una perspectiva diferente para descubrir conversaciones y campos que vale la pena investigar.</Text>
 
+        </Reveal>
+        <Reveal delay={150}>
         <View style={styles.radialCard}>
           <View style={styles.radialTop}><View><Text style={styles.micro}>EL MAPA RADAR</Text><Text style={styles.panelTitle}>Panorama de intereses</Text></View><View style={styles.mock}><Text style={styles.mockText}>SIMULADO</Text></View></View>
           <View style={styles.orbit}>
+            <RadarPulse />
             <View style={styles.orbitOuter}><View style={styles.orbitMiddle}><View style={styles.orbitInner}><Text style={styles.orbitCore}>B</Text></View></View></View>
             <View style={[styles.orbitDot, { left: "19%", top: "26%", backgroundColor: theme.red }]} />
             <View style={[styles.orbitDot, { left: "72%", top: "35%", backgroundColor: theme.cyan }]} />
@@ -29,6 +35,8 @@ export default function Radar() {
           <Text style={styles.orbitNote}>Representación visual ilustrativa. No se utilizan datos de seguimiento ni estadísticas reales.</Text>
         </View>
 
+        </Reveal>
+        <Reveal delay={230}>
         <View style={styles.sectionRow}><Text style={styles.sectionTitle}>Índice de interés</Text><Text style={styles.demoText}>EJEMPLO</Text></View>
         <View style={styles.signals}>
           {radarSignals.map((signal, i) => (
@@ -39,8 +47,9 @@ export default function Radar() {
             </Pressable>
           ))}
         </View>
+        </Reveal>
         <View style={styles.sectionRow}><Text style={styles.sectionTitle}>Para profundizar</Text><Text style={styles.demoText}>LECTURAS</Text></View>
-        {catalog.slice(4, 7).map(item => <CatalogCard key={item.id} item={item} />)}
+        {catalog.slice(4, 7).map((item, index) => <Reveal key={item.id} delay={300 + index * 60}><CatalogCard item={item} /></Reveal>)}
       </ScrollView>
     </Screen>
   );

@@ -3,6 +3,7 @@ import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { useRouter } from "expo-router";
 import { Screen } from "../../src/components/Screen";
 import { Brand } from "../../src/components/Brand";
+import { Reveal } from "../../src/components/Reveal";
 import { theme } from "../../src/theme";
 
 function InfoRow({ label, value }: { label: string; value: string }) {
@@ -14,11 +15,14 @@ export default function Settings() {
   return (
     <Screen title="Mi espacio" subtitle="LA EXPERIENCIA BUSCADOR">
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
+        <Reveal delay={40}>
         <View style={styles.identity}>
           <Brand size={70} />
           <View style={{ flex: 1 }}><Text style={styles.name}>Buscador</Text><Text style={styles.tagline}>Una nueva forma de descubrir.</Text><Text style={styles.version}>EDICIÓN PREVIEW  ·  0.2.0</Text></View>
         </View>
 
+        </Reveal>
+        <Reveal delay={135}>
         <Text style={styles.sectionTitle}>Tu experiencia</Text>
         <Pressable onPress={() => router.push("/briefing")} style={styles.linkCard} accessibilityRole="button">
           <View style={styles.iconBox}><Text style={styles.icon}>✳</Text></View><View style={{ flex: 1 }}><Text style={styles.linkTitle}>Briefing editorial</Text><Text style={styles.linkSub}>Tres historias para comenzar</Text></View><Text style={styles.linkArrow}>↗</Text>
@@ -27,6 +31,8 @@ export default function Settings() {
           <View style={styles.iconBox}><Text style={styles.icon}>◎</Text></View><View style={{ flex: 1 }}><Text style={styles.linkTitle}>Mapa Radar</Text><Text style={styles.linkSub}>Explora categorías e intereses</Text></View><Text style={styles.linkArrow}>↗</Text>
         </Pressable>
 
+        </Reveal>
+        <Reveal delay={215}>
         <Text style={styles.sectionTitle}>Sobre esta versión</Text>
         <View style={styles.infoCard}>
           <InfoRow label="Estilo visual" value="Oscuro / Rojo editorial" />
@@ -36,6 +42,8 @@ export default function Settings() {
           <InfoRow label="Conexión" value="Contenido local, sin noticias en vivo" />
         </View>
 
+        </Reveal>
+        <Reveal delay={290}>
         <Text style={styles.sectionTitle}>Privacidad y transparencia</Text>
         <View style={styles.infoCard}>
           <InfoRow label="Notificaciones de otras apps" value="No se accede" />
@@ -45,6 +53,7 @@ export default function Settings() {
           <InfoRow label="Datos de cuenta" value="Sin inicio de sesión en esta versión" />
         </View>
 
+        </Reveal>
         <Text style={styles.footer}>BUSCADOR / HECHO PARA DESCUBRIR{"\n"}Prototipo académico · Datos de muestra</Text>
       </ScrollView>
     </Screen>

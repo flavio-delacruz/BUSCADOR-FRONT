@@ -14,7 +14,7 @@ export function CatalogCard({ item }: { item: CatalogItem }) {
     <Pressable
       accessibilityRole="button"
       accessibilityLabel={"Leer: " + item.title}
-      style={styles.card}
+      style={({ pressed }) => [styles.card, pressed && styles.pressed]}
       onPress={() => router.push({ pathname: "/detail/[id]", params: { id: item.id } })}
     >
       <View style={styles.visual}><Artwork accent={item.accent} icon={item.icon} height={112} compact /></View>
@@ -38,6 +38,7 @@ export function CatalogCard({ item }: { item: CatalogItem }) {
   );
 }
 const styles = StyleSheet.create({
+  pressed: { backgroundColor: theme.cardAlt, transform: [{ scale: 0.99 }] },
   card: { backgroundColor: theme.card, borderColor: theme.border, borderWidth: 1, borderRadius: 22, padding: 12, marginBottom: 12, flexDirection: "row", gap: 12 },
   visual: { width: 102, overflow: "hidden", borderRadius: 14 },
   textCol: { flex: 1, paddingTop: 3 },
