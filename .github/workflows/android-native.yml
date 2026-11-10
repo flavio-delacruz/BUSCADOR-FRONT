@@ -43,8 +43,10 @@ jobs:
           ./gradlew --no-daemon --stacktrace :buscador-notifications:compileDebugKotlin :app:processDebugMainManifest
       - name: Verify listener exists in generated merged manifest
         run: |
-          if grep -rl "BuscadorNotificationListener" android/app/build/intermediates/merged_manifests android/app/build/intermediates/merged_manifest; then
+          matches=$(find android/app/build/intermediates -type f -name AndroidManifest.xml -exec grep -l "BuscadorNotificationListener" {} +)
+          if [ -n "$matches" ]; then
             echo "Verified: notification listener declared in merged Android manifest"
+            echo "$matches"
           else
             echo "ERROR: notification listener not found in Android merged manifest"
             exit 1
