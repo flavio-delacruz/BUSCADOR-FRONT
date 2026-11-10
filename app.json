@@ -3,20 +3,39 @@
     "name": "Buscador",
     "slug": "buscador",
     "scheme": "buscador",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "orientation": "portrait",
     "userInterfaceStyle": "dark",
-    "backgroundColor": "#08090C",
+    "backgroundColor": "#090B11",
     "plugins": [
-      "expo-router"
+      "expo-router",
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#090B11",
+          "image": "./assets/buscador-splash.png",
+          "imageWidth": 190,
+          "resizeMode": "contain",
+          "dark": {
+            "backgroundColor": "#090B11",
+            "image": "./assets/buscador-splash.png"
+          }
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true
     },
     "android": {
       "package": "com.flaviodelacruz.buscador",
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/buscador-splash.png",
+        "backgroundColor": "#090B11"
+      },
+      "allowBackup": false
     },
-    "newArchEnabled": true
+    "newArchEnabled": true,
+    "icon": "./assets/buscador-icon.png"
   }
 }
