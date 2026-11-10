@@ -37,10 +37,25 @@ class BuscadorNotificationListener : NotificationListenerService() {
     if ((notification.flags and Notification.FLAG_GROUP_SUMMARY) != 0) return
     val extras = notification.extras ?: return
     val title = extras.getCharSequence(Notification.EXTRA_TITLE)?.toString() ?: ""
-    val body = (
-      extras.getCharSequence(Notification.EXTRA_BIG_TEXT)
-        ?: extras.getCharSequence(Notification.EXTRA_TEXT)
-      )?.toString() ?: ""
+    // MessagingStyle is commonly used by chat apps. Prefer the newest message
+    // preview over a generic "multiple new messages" summary.
+    val messagingPreview = if (android.os.Build.VERSION.SDK_INT >= 30) {
+      try {
+        Notification.MessagingStyle.Message.getMessagesFromBundleArray(
+          extras.getParcelableArray(Notification.EXTRA_MESSAGES)
+        ).lastOrNull()?.text?.toString()
+      } catch (_: Exception) {
+        null
+      }
+    } else {
+      null
+    }
+    val body = sequenceOf(
+      messagingPreview,
+      extras.getCharSequence(Notification.EXTRA_BIG_TEXT)?.toString(),
+      extras.getCharSequence(Notification.EXTRA_TEXT)?.toString(),
+      extras.getCharSequenceArray(Notification.EXTRA_TEXT_LINES)?.lastOrNull()?.toString()
+    ).firstOrNull { !it.isNullOrBlank() } ?: ""
 
     if (body.isBlank()) return
     try {
