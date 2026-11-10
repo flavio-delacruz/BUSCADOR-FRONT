@@ -18,7 +18,7 @@ export default function Settings() {
         <Reveal delay={40}>
         <View style={styles.identity}>
           <Brand size={70} />
-          <View style={{ flex: 1 }}><Text style={styles.name}>Buscador</Text><Text style={styles.tagline}>Una nueva forma de descubrir.</Text><Text style={styles.version}>EDICIÓN PREVIEW  ·  0.2.0</Text></View>
+          <View style={{ flex: 1 }}><Text style={styles.name}>Buscador</Text><Text style={styles.tagline}>Una nueva forma de descubrir.</Text><Text style={styles.version}>EDICIÓN 1.1.0  ·  HISTORIAL LOCAL</Text></View>
         </View>
 
         </Reveal>
