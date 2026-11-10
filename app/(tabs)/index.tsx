@@ -4,6 +4,7 @@ import { useRouter } from "expo-router";
 import { Screen } from "../../src/components/Screen";
 import { Artwork } from "../../src/components/Artwork";
 import { CatalogCard } from "../../src/components/CatalogCard";
+import { NotificationSetupCard } from "../../src/components/NotificationSetupCard";
 import { Reveal } from "../../src/components/Reveal";
 import { catalog, categories, type Category } from "../../src/data/catalog";
 import { theme } from "../../src/theme";
@@ -19,6 +20,7 @@ export default function Home() {
   return (
     <Screen title="BUSCADOR" subtitle="IDEAS · CONTEXTO · DESCUBRIMIENTO">
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
+        <NotificationSetupCard />
         <Reveal delay={40} distance={20}>
           <View style={styles.introRow}>
             <View>
