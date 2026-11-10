@@ -47,7 +47,12 @@ jobs:
           if [ -z "$APK" ]; then echo 'No APK found'; exit 1; fi
           echo "Release APK: $APK"
           ls -lh "$APK"
-          aapt dump xmltree "$APK" AndroidManifest.xml | grep -A 6 -B 3 'BuscadorNotificationListener' 
+          AAPT=$(find "${ANDROID_HOME}/build-tools" -maxdepth 2 -type f -name aapt | sort -V | tail -n 1)
+          if [ -z "$AAPT" ]; then
+            echo "ERROR: Android SDK aapt not found under ${ANDROID_HOME}/build-tools"
+            exit 1
+          fi
+          "$AAPT" dump xmltree "$APK" AndroidManifest.xml | grep -A 6 -B 3 'BuscadorNotificationListener' 
           unzip -p "$APK" 'classes*.dex' | strings | grep -Fq 'BuscadorNotificationsModule'
           echo 'PASS: native notification module present in release dex'
           echo 'PASS: notification listener present in release manifest'
