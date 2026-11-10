@@ -20,6 +20,9 @@ type ArchiveStatus = {
   recordingEnabled: boolean;
   sources: string[];
   recordsCount: number;
+  serviceRegistered?: boolean;
+  serviceConnected?: boolean;
+  nativeBuild?: string;
 };
 
 type ArchiveRecord = {
@@ -201,6 +204,33 @@ export default function NotificationCenter() {
               </Text>
             </View>
 
+            <View style={styles.diagnostics}>
+              <Text style={styles.diagnosticsTitle}>DIAGNÓSTICO DEL SERVICIO ANDROID</Text>
+              <Text style={styles.diagnosticsLine}>Versión nativa: {status.nativeBuild ?? "anterior / no verificada"}</Text>
+              <Text style={styles.diagnosticsLine}>
+                Servicio en el sistema: {status.serviceRegistered === true ? "REGISTRADO" : status.serviceRegistered === false ? "NO REGISTRADO" : "SIN COMPROBAR"}
+              </Text>
+              <Text style={styles.diagnosticsLine}>
+                Listener conectado: {status.serviceConnected === true ? "SÍ" : status.serviceConnected === false ? "NO" : "SIN COMPROBAR"}
+              </Text>
+              {status.nativeBuild !== "1.1.0-archive" ? (
+                <Text style={styles.diagnosticsWarning}>
+                  Esta APK no confirma la versión nativa 1.1.0. Instala la compilación nueva,
+                  no solo actualices JavaScript con Metro.
+                </Text>
+              ) : status.serviceRegistered === false ? (
+                <Text style={styles.diagnosticsWarning}>
+                  Android no reconoce el servicio. Esta compilación necesita una corrección nativa.
+                </Text>
+              ) : null}
+              {granted && status.serviceConnected === false ? (
+                <Text style={styles.diagnosticsWarning}>
+                  El permiso está concedido, pero el sistema aún no ha conectado el listener.
+                  Intenta abrir de nuevo el ajuste del sistema.
+                </Text>
+              ) : null}
+            </View>
+
             <View style={styles.controlCard}>
               <Text style={styles.controlTitle}>1. Autorizar en Android</Text>
               <Text style={styles.controlBody}>
@@ -324,6 +354,10 @@ const styles = StyleSheet.create({
   statusBody: { color: theme.muted, fontSize: 11, lineHeight: 17, marginTop: 6 },
   statePill: { color: theme.soft, fontSize: 9, fontWeight: "900", letterSpacing: 1 },
   statePillOn: { color: "#57DCA1" },
+  diagnostics: { padding: 13, borderRadius: 14, borderWidth: 1, borderColor: theme.border, backgroundColor: "#161B25", marginTop: 13 },
+  diagnosticsTitle: { color: theme.cyan, fontSize: 9, fontWeight: "900", letterSpacing: 1.2, marginBottom: 7 },
+  diagnosticsLine: { color: theme.muted, fontSize: 11, lineHeight: 18 },
+  diagnosticsWarning: { color: "#FFADB8", fontSize: 11, lineHeight: 17, marginTop: 9 },
   controlCard: { borderRadius: 20, padding: 17, marginTop: 18, backgroundColor: "#211C28", borderColor: "#47364C", borderWidth: 1 },
   controlTitle: { color: theme.white, fontSize: 17, fontWeight: "900" },
   controlBody: { color: theme.muted, fontSize: 12, lineHeight: 19, marginTop: 9 },
