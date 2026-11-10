@@ -40,10 +40,12 @@ jobs:
         run: |
           cd android
           chmod +x gradlew
-          ./gradlew --no-daemon :expo:generateExpoModulesPackageList
+          ./gradlew --no-daemon :expo:compileDebugKotlin
+          echo "Expo generated package list candidates:"
+          find . -type f \( -name '*PackageList.kt' -o -name '*PackageList.java' \) -print
           echo "Generated provider references:"
-          find . -type f -name 'ExpoModulesPackageList.kt' -print -exec grep -n -C 4 'BuscadorNotificationsModule' {} \;
-          found=$(find . -type f -name 'ExpoModulesPackageList.kt' -exec grep -l 'BuscadorNotificationsModule' {} +)
+          found=$(find . -type f \( -name '*PackageList.kt' -o -name '*PackageList.java' \) -exec grep -l 'BuscadorNotificationsModule' {} +)
+          if [ -n "$found" ]; then grep -n -C 4 'BuscadorNotificationsModule' $found; fi
           if [ -z "$found" ]; then
             echo "ERROR: BuscadorNotificationsModule was compiled but not registered in ExpoModulesPackageList"
             exit 1
