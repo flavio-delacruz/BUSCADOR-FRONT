@@ -3,7 +3,7 @@
     "name": "Buscador",
     "slug": "buscador",
     "scheme": "buscador",
-    "version": "1.1.0",
+    "version": "1.1.1",
     "orientation": "portrait",
     "userInterfaceStyle": "dark",
     "backgroundColor": "#090B11",
@@ -30,7 +30,8 @@
             "enableShrinkResourcesInReleaseBuilds": false
           }
         }
-      ]
+      ],
+      "./plugins/withBuscadorNotificationBridge"
     ],
     "experiments": {
       "typedRoutes": true

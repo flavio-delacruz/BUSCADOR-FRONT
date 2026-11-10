@@ -3,6 +3,7 @@ import {
   Alert,
   AppState,
   Platform,
+  NativeModules,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -43,7 +44,8 @@ type ArchiveModule = {
 };
 
 const native: ArchiveModule | null = Platform.OS === "android"
-  ? requireOptionalNativeModule<ArchiveModule>("BuscadorNotifications")
+  ? ((NativeModules.BuscadorNotificationsLegacy as ArchiveModule | undefined)
+      ?? requireOptionalNativeModule<ArchiveModule>("BuscadorNotifications"))
   : null;
 
 const sourceOptions = [
@@ -213,7 +215,7 @@ export default function NotificationCenter() {
               <Text style={styles.diagnosticsLine}>
                 Listener conectado: {status.serviceConnected === true ? "SÍ" : status.serviceConnected === false ? "NO" : "SIN COMPROBAR"}
               </Text>
-              {status.nativeBuild !== "1.1.0-archive" ? (
+              {status.nativeBuild !== "1.1.1-legacy-bridge" && status.nativeBuild !== "1.1.0-archive" ? (
                 <Text style={styles.diagnosticsWarning}>
                   Esta APK no confirma la versión nativa 1.1.0. Instala la compilación nueva,
                   no solo actualices JavaScript con Metro.

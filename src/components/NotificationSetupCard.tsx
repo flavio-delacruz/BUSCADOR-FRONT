@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { Alert, AppState, Pressable, StyleSheet, Text, View } from "react-native";
+import { Alert, AppState, NativeModules, Pressable, StyleSheet, Text, View } from "react-native";
 import { useRouter } from "expo-router";
 import { requireOptionalNativeModule } from "expo";
 import { theme } from "../theme";
 
 type Status = { accessGranted: boolean; recordingEnabled: boolean; sources: string[] };
 type Bridge = { getStatus(): Promise<Status> };
-const notifications = requireOptionalNativeModule<Bridge>("BuscadorNotifications");
+const notifications = (NativeModules.BuscadorNotificationsLegacy as Bridge | undefined)
+  ?? requireOptionalNativeModule<Bridge>("BuscadorNotifications");
 
 let introShownThisSession = false;
 
