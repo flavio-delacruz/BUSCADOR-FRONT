@@ -1,0 +1,14 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+  <application>
+    <!-- Android's special notification access is explicitly granted by the user in Settings. -->
+    <service
+      android:name="expo.modules.buscadornotifications.BuscadorNotificationListener"
+      android:label="Buscador · Historial voluntario"
+      android:exported="false"
+      android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
+      <intent-filter>
+        <action android:name="android.service.notification.NotificationListenerService" />
+      </intent-filter>
+    </service>
+  </application>
+</manifest>
