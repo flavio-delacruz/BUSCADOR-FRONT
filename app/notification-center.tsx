@@ -217,8 +217,8 @@ export default function NotificationCenter() {
               </Text>
               {status.nativeBuild !== "1.1.1-legacy-bridge" && status.nativeBuild !== "1.1.0-archive" ? (
                 <Text style={styles.diagnosticsWarning}>
-                  Esta APK no confirma la versión nativa 1.1.0. Instala la compilación nueva,
-                  no solo actualices JavaScript con Metro.
+                  No se detecta la versión del módulo local. No instales otras APK a ciegas;
+                  revisa primero la integración nativa.
                 </Text>
               ) : status.serviceRegistered === false ? (
                 <Text style={styles.diagnosticsWarning}>

@@ -18,7 +18,7 @@ permissions:
 jobs:
   native:
     runs-on: ubuntu-latest
-    timeout-minutes: 40
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -36,20 +36,14 @@ jobs:
         run: |
           grep -q 'android.enableMinifyInReleaseBuilds=false' android/gradle.properties
           grep -q 'android.enableShrinkResourcesInReleaseBuilds=false' android/gradle.properties
-      - name: Assert runtime module registration in Expo generated provider
+      - name: Verify explicit React Native fallback registration
         run: |
+          grep -Rn 'add(expo.modules.buscadornotifications.BuscadorLegacyPackage())' android/app/src/main/java
           cd android
           chmod +x gradlew
-          ./gradlew --no-daemon :expo:compileDebugKotlin
-          echo "Expo generated package list candidates:"
-          find . -type f \( -name '*PackageList.kt' -o -name '*PackageList.java' \) -print
-          echo "Generated provider references:"
-          found=$(find . -type f \( -name '*PackageList.kt' -o -name '*PackageList.java' \) -exec grep -l 'BuscadorNotificationsModule' {} +)
-          if [ -n "$found" ]; then grep -n -C 4 'BuscadorNotificationsModule' $found; fi
-          if [ -z "$found" ]; then
-            echo "ERROR: BuscadorNotificationsModule was compiled but not registered in ExpoModulesPackageList"
-            exit 1
-          fi
+          ./gradlew --no-daemon :expo:compileDebugKotlin :buscador-notifications:compileDebugKotlin
+          echo "Expo package provider references (informational):"
+          find . -type f \( -name '*PackageList.kt' -o -name '*PackageList.java' \) -exec grep -n 'BuscadorNotificationsModule' {} + || true
       - name: Build actual release APK
         run: |
           cd android
@@ -67,6 +61,6 @@ jobs:
             exit 1
           fi
           "$AAPT" dump xmltree "$APK" AndroidManifest.xml | grep -A 6 -B 3 'BuscadorNotificationListener' 
-          unzip -p "$APK" 'classes*.dex' | strings | grep -Fq 'BuscadorNotificationsModule'
-          echo 'PASS: native notification module present in release dex'
+          unzip -p "$APK" 'classes*.dex' | strings | grep -Fq 'BuscadorNotificationsLegacy'
+          echo 'PASS: explicitly registered React Native native module present in release dex'
           echo 'PASS: notification listener present in release manifest'
