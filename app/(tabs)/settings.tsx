@@ -45,8 +45,21 @@ export default function Settings() {
         </Reveal>
         <Reveal delay={290}>
         <Text style={styles.sectionTitle}>Privacidad y transparencia</Text>
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel="Abrir centro de notificaciones y permisos"
+          onPress={() => router.push("/notification-center")}
+          style={styles.linkCard}
+        >
+          <View style={styles.iconBox}><Text style={styles.icon}>◎</Text></View>
+          <View style={{ flex: 1 }}>
+            <Text style={styles.linkTitle}>Centro de notificaciones</Text>
+            <Text style={styles.linkSub}>Transparencia, fuentes y controles de privacidad</Text>
+          </View>
+          <Text style={styles.linkArrow}>↗</Text>
+        </Pressable>
         <View style={styles.infoCard}>
-          <InfoRow label="Notificaciones de otras apps" value="No se accede" />
+          <InfoRow label="Acceso a notificaciones" value="Inactivo. El módulo aún no está implementado." />
           <View style={styles.divider} />
           <InfoRow label="Escritura en otras apps" value="No se registra" />
           <View style={styles.divider} />
