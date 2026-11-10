@@ -1,43 +1,55 @@
 # BUSCADOR-FRONT
 
-**Buscador · Editorial Preview** — explorador visual de ideas y noticias de muestra para Android.
-
-Construido con React Native, Expo Router y TypeScript. La interfaz actual no solicita permisos especiales de Android ni accede a notificaciones o texto escrito en otras aplicaciones.
+Buscador es un explorador editorial de ideas y contenido de muestra, realizado
+con React Native, Expo Router y TypeScript para Android.
 
 ## Pantallas
+- **Hoy**, **Radar**, **Explorar**, **Guardados**: contenido editorial y búsqueda local.
+- **Ajustes**: privacidad y acceso al Centro de notificaciones.
+- **Centro de notificaciones**: acceso especial de Android, selección de fuentes,
+  activación/desactivación, historial local y borrado total.
+- **Detalle** y **Briefing**: lectura editorial de ejemplo.
 
-- **Hoy:** portada editorial, historia destacada, temas y briefing.
-- **Radar:** exploración de intereses y puntuaciones **simuladas** con representación visual ilustrativa.
-- **Explorar:** búsqueda local por palabras y categorías.
-- **Guardados:** colección de lecturas de la sesión.
-- **Ajustes:** identidad, enlaces de exploración y transparencia.
-- **Detalle:** lectura de los artículos de muestra.
-- **Briefing:** selección de tres historias.
+El catálogo de noticias es ficticio: no muestra actualidad real.
 
-Todas las historias son **contenido editorial ilustrativo, no noticias actuales**. No hay scraping ni API de noticias implementada. El siguiente paso podría ser una fuente pública de noticias con atribución y fechas.
+## Historial autorizado de notificaciones
 
-## Probar con la APK de desarrollo ya instalada
+El nuevo módulo Android (Kotlin) puede almacenar **solo nuevas notificaciones**
+que el sistema muestre procedentes de WhatsApp, Facebook y TikTok. No accede
+directamente a chats, no restaura mensajes en esas apps y no recupera contenido
+anterior a su activación. Se habilita únicamente tras seleccionar las fuentes,
+dar permiso de Android y activar el guardado en la app. El historial permanece
+cifrado localmente (AES-GCM / Android Keystore), máximo 500 registros/30 días.
+No se envía a MongoDB ni a otros servicios.
 
-Desde Termux:
+Documentación técnica: [docs/notification-center.md](docs/notification-center.md)
+
+## Instalar actualización **nativa** (nueva APK)
+
+La APK anterior solo ejecuta la interfaz JavaScript. Tras incorporar el módulo
+Kotlin, debes generar e instalar otra APK una vez:
 
 ```bash
 cd ~/BUSCADOR/frontend
 git pull --ff-only
+npm install --no-audit --no-fund
 npm run typecheck
+EAS_SKIP_AUTO_FINGERPRINT=1 npx eas-cli@latest build -p android --profile development
+```
+
+**El typecheck de GitHub revisa TypeScript, no Kotlin.** El módulo nativo
+todavía requiere comprobar que el nuevo EAS Build compile y funcione en
+un Android real.
+
+Después de instalar la APK nueva, la edición habitual de TS/JS sigue usando:
+
+```bash
 npx expo start --dev-client --localhost -c
 ```
 
-En la aplicación instalada, conecta a `http://127.0.0.1:8081`. Los cambios de JavaScript/TypeScript no requieren reconstruir la APK.
-
-## Desarrollo nuevo
-
-```bash
-npm install --no-audit --no-fund
-npm run typecheck
-```
-
-Dependencias nativas existentes: no se incorporaron nuevas librerías nativas en el rediseño editorial.
-
 ## Privacidad
-
-No se capturan mensajes ni pulsaciones de teclado. Si en una fase futura se construyen funciones que requieren acceso a información privada, deberán explicarse claramente, solicitar permiso explícito y permitir al usuario desactivarlas y gestionar sus datos.
+El permiso de acceso a notificaciones es amplio a nivel de Android, por eso
+se filtra y conserva únicamente el texto de notificaciones de fuentes elegidas.
+Al detener el registro, Android puede conservar el permiso concedido:
+el usuario también puede revocarlo en los Ajustes del dispositivo.
+No se registra lo escrito en otras aplicaciones.

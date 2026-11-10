@@ -59,7 +59,7 @@ export default function Settings() {
           <Text style={styles.linkArrow}>↗</Text>
         </Pressable>
         <View style={styles.infoCard}>
-          <InfoRow label="Acceso a notificaciones" value="Inactivo. El módulo aún no está implementado." />
+          <InfoRow label="Acceso a notificaciones" value="Disponible en APK nueva; requiere permiso y activación voluntaria." />
           <View style={styles.divider} />
           <InfoRow label="Escritura en otras apps" value="No se registra" />
           <View style={styles.divider} />
