@@ -15,7 +15,7 @@ El catálogo de noticias es ficticio: no muestra actualidad real.
 ## Historial autorizado de notificaciones
 
 El nuevo módulo Android (Kotlin) puede almacenar **solo nuevas notificaciones**
-que el sistema muestre procedentes de WhatsApp, Facebook y TikTok. No accede
+que el sistema muestre procedentes de WhatsApp, Facebook, Messenger (mensajes de Facebook) y TikTok. No accede
 directamente a chats, no restaura mensajes en esas apps y no recupera contenido
 anterior a su activación. Se habilita únicamente tras seleccionar las fuentes,
 dar permiso de Android y activar el guardado en la app. El historial permanece

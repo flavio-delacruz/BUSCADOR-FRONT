@@ -24,7 +24,7 @@ internal object NotificationArchiveStore {
   private const val maxEntries = 500
   private const val lifetimeMillis = 30L * 24L * 60L * 60L * 1000L
 
-  val packages = setOf("com.whatsapp", "com.whatsapp.w4b", "com.facebook.katana", "com.zhiliaoapp.musically")
+  val packages = setOf("com.whatsapp", "com.whatsapp.w4b", "com.facebook.katana", "com.facebook.lite", "com.facebook.orca", "com.zhiliaoapp.musically")
 
   private fun preferences(context: Context) =
     context.getSharedPreferences(preferencesName, Context.MODE_PRIVATE)

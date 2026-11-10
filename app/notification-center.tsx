@@ -45,7 +45,8 @@ const native: ArchiveModule | null = Platform.OS === "android"
 
 const sourceOptions = [
   { id: "whatsapp", name: "WhatsApp", packages: ["com.whatsapp", "com.whatsapp.w4b"], accent: "#57DCA1" },
-  { id: "facebook", name: "Facebook", packages: ["com.facebook.katana"], accent: "#82A9FF" },
+  { id: "facebook", name: "Facebook", packages: ["com.facebook.katana", "com.facebook.lite"], accent: "#82A9FF" },
+  { id: "messenger", name: "Messenger", packages: ["com.facebook.orca"], accent: "#B39CFF" },
   { id: "tiktok", name: "TikTok", packages: ["com.zhiliaoapp.musically"], accent: "#FF8DAB" }
 ] as const;
 
@@ -58,7 +59,8 @@ const initialStatus: ArchiveStatus = {
 
 function sourceLabel(pkg: string) {
   if (pkg.startsWith("com.whatsapp")) return "WhatsApp";
-  if (pkg === "com.facebook.katana") return "Facebook";
+  if (pkg === "com.facebook.orca") return "Messenger";
+  if (pkg === "com.facebook.katana" || pkg === "com.facebook.lite") return "Facebook";
   if (pkg === "com.zhiliaoapp.musically") return "TikTok";
   return "Notificación";
 }
