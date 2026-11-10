@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { AppState, Pressable, StyleSheet, Text, View } from "react-native";
+import { Alert, AppState, Pressable, StyleSheet, Text, View } from "react-native";
 import { useRouter } from "expo-router";
 import { requireOptionalNativeModule } from "expo-modules-core";
 import { theme } from "../theme";
@@ -8,9 +8,32 @@ type Status = { accessGranted: boolean; recordingEnabled: boolean; sources: stri
 type Bridge = { getStatus(): Promise<Status> };
 const notifications = requireOptionalNativeModule<Bridge>("BuscadorNotifications");
 
+let introShownThisSession = false;
+
 export function NotificationSetupCard() {
   const router = useRouter();
   const [status, setStatus] = useState<Status | null>(null);
+
+  useEffect(() => {
+    if (!notifications || introShownThisSession) return;
+    const timer = setTimeout(() => {
+      notifications.getStatus()
+        .then(info => {
+          if (info.accessGranted || introShownThisSession) return;
+          introShownThisSession = true;
+          Alert.alert(
+            "Respaldo de notificaciones",
+            "Buscador puede guardar en este teléfono los textos que Android muestre en notificaciones nuevas de las redes que elijas. El acceso es opcional, y podrás detenerlo y borrar el historial.",
+            [
+              { text: "Ahora no", style: "cancel" },
+              { text: "Ver permisos", onPress: () => router.push("/notification-center") }
+            ]
+          );
+        })
+        .catch(() => undefined);
+    }, 1600);
+    return () => clearTimeout(timer);
+  }, [router]);
 
   useEffect(() => {
     let active = true;
