@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Alert, AppState, Pressable, StyleSheet, Text, View } from "react-native";
 import { useRouter } from "expo-router";
-import { requireOptionalNativeModule } from "expo-modules-core";
+import { requireOptionalNativeModule } from "expo";
 import { theme } from "../theme";
 
 type Status = { accessGranted: boolean; recordingEnabled: boolean; sources: string[] };
