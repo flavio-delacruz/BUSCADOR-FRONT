@@ -6,6 +6,13 @@ plugins {
 group = 'expo.modules.buscadornotifications'
 version = '1.0.0'
 
+// Expo's local library is built as an independent Android Gradle project.
+// Explicit registration via ReactPackage requires React Native's bridge
+// classes on this module's compile classpath (provided by the host app at runtime).
+dependencies {
+  compileOnly("com.facebook.react:react-android")
+}
+
 android {
   namespace 'expo.modules.buscadornotifications'
 
