@@ -41,9 +41,21 @@ class BuscadorNotificationsModule : Module() {
         "serviceConnected" to BuscadorNotificationListener.connected,
         "nativeBuild" to "1.1.0-archive",
         "recordingEnabled" to NotificationArchiveStore.isEnabled(context),
+        "setupFinished" to NotificationArchiveStore.setupFinished(context),
+        "setupPending" to NotificationArchiveStore.setupPending(context),
         "sources" to NotificationArchiveStore.selectedPackages(context).sorted(),
         "recordsCount" to NotificationArchiveStore.getRecords(context).size
       )
+    }
+
+    AsyncFunction("setSetupPending") { pending: Boolean ->
+      NotificationArchiveStore.setSetupPending(context(), pending)
+      true
+    }
+
+    AsyncFunction("setSetupFinished") { finished: Boolean ->
+      NotificationArchiveStore.setSetupFinished(context(), finished)
+      true
     }
 
     AsyncFunction("openAccessSettings") {

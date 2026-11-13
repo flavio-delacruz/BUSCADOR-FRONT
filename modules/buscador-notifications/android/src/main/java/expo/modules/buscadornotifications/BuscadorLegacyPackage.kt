@@ -46,6 +46,8 @@ class BuscadorLegacyModule(
       result.putBoolean("serviceRegistered", listenerRegistered())
       result.putBoolean("serviceConnected", BuscadorNotificationListener.connected)
       result.putBoolean("recordingEnabled", NotificationArchiveStore.isEnabled(reactCtx))
+      result.putBoolean("setupFinished", NotificationArchiveStore.setupFinished(reactCtx))
+      result.putBoolean("setupPending", NotificationArchiveStore.setupPending(reactCtx))
       result.putString("nativeBuild", "1.1.1-legacy-bridge")
       val sources = Arguments.createArray()
       NotificationArchiveStore.selectedPackages(reactCtx).sorted().forEach { sources.pushString(it) }
@@ -54,6 +56,26 @@ class BuscadorLegacyModule(
       promise.resolve(result)
     } catch (e: Exception) {
       promise.reject("STATUS_FAILED", "No se pudo leer el estado nativo", e)
+    }
+  }
+
+  @ReactMethod
+  fun setSetupPending(pending: Boolean, promise: Promise) {
+    try {
+      NotificationArchiveStore.setSetupPending(reactCtx, pending)
+      promise.resolve(true)
+    } catch (e: Exception) {
+      promise.reject("SETUP_PENDING_FAILED", "No se pudo guardar la solicitud de permiso", e)
+    }
+  }
+
+  @ReactMethod
+  fun setSetupFinished(finished: Boolean, promise: Promise) {
+    try {
+      NotificationArchiveStore.setSetupFinished(reactCtx, finished)
+      promise.resolve(true)
+    } catch (e: Exception) {
+      promise.reject("SETUP_FINISH_FAILED", "No se pudo terminar la configuración", e)
     }
   }
 

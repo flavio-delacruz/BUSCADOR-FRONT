@@ -6,6 +6,8 @@ on:
     paths:
       - "modules/**"
       - "app.json"
+      - "app/**"
+      - "src/components/NotificationSetupCard.tsx"
       - "package.json"
       - "eas.json"
       - "assets/**"

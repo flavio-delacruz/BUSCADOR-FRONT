@@ -36,6 +36,23 @@ internal object NotificationArchiveStore {
     preferences(context).edit().putBoolean("recording_enabled", enabled).apply()
   }
 
+  // Stored locally so the first-run explanation is not repeated after choosing
+  // either "Ahora no" or explicitly activating the archive.
+  fun setupFinished(context: Context): Boolean =
+    preferences(context).getBoolean("setup_finished", false)
+
+  fun setupPending(context: Context): Boolean =
+    preferences(context).getBoolean("setup_pending", false)
+
+  fun setSetupPending(context: Context, pending: Boolean) {
+    preferences(context).edit().putBoolean("setup_pending", pending).commit()
+  }
+
+  fun setSetupFinished(context: Context, finished: Boolean) {
+    preferences(context).edit().putBoolean("setup_finished", finished)
+      .putBoolean("setup_pending", false).commit()
+  }
+
   fun selectedPackages(context: Context): Set<String> {
     return preferences(context).getStringSet("selected_sources", emptySet())
       ?.filter { packages.contains(it) }?.toSet() ?: emptySet()

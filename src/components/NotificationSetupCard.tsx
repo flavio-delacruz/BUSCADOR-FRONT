@@ -1,38 +1,36 @@
 import React, { useEffect, useState } from "react";
-import { Alert, AppState, NativeModules, Pressable, StyleSheet, Text, View } from "react-native";
+import { AppState, NativeModules, Pressable, StyleSheet, Text, View } from "react-native";
 import { useRouter } from "expo-router";
 import { requireOptionalNativeModule } from "expo";
 import { theme } from "../theme";
 
-type Status = { accessGranted: boolean; recordingEnabled: boolean; sources: string[] };
+type Status = {
+  accessGranted: boolean;
+  recordingEnabled: boolean;
+  setupFinished?: boolean;
+  setupPending?: boolean;
+};
 type Bridge = { getStatus(): Promise<Status> };
 const notifications = (NativeModules.BuscadorNotificationsLegacy as Bridge | undefined)
   ?? requireOptionalNativeModule<Bridge>("BuscadorNotifications");
 
-let introShownThisSession = false;
+let onboardingOpenedThisSession = false;
 
 export function NotificationSetupCard() {
   const router = useRouter();
   const [status, setStatus] = useState<Status | null>(null);
 
   useEffect(() => {
-    if (!notifications || introShownThisSession) return;
+    if (!notifications || onboardingOpenedThisSession) return;
     const timer = setTimeout(() => {
       notifications.getStatus()
         .then(info => {
-          if (info.accessGranted || introShownThisSession) return;
-          introShownThisSession = true;
-          Alert.alert(
-            "Respaldo de notificaciones",
-            "Buscador puede guardar en este teléfono los textos que Android muestre en notificaciones nuevas de las redes que elijas. El acceso es opcional, y podrás detenerlo y borrar el historial.",
-            [
-              { text: "Ahora no", style: "cancel" },
-              { text: "Ver permisos", onPress: () => router.push("/notification-center") }
-            ]
-          );
+          if (info.setupFinished || onboardingOpenedThisSession) return;
+          onboardingOpenedThisSession = true;
+          router.push("/notification-setup");
         })
         .catch(() => undefined);
-    }, 1600);
+    }, 1000);
     return () => clearTimeout(timer);
   }, [router]);
 
