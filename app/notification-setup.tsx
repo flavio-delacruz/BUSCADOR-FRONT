@@ -61,6 +61,13 @@ export default function NotificationSetup() {
     try {
       const fresh = await archive.getStatus();
       setStatus(fresh);
+      // The listener may already have activated the archive as soon as
+      // Android granted access; this is still gated by the user's prior opt-in.
+      if (fresh.setupFinished && fresh.accessGranted && fresh.recordingEnabled) {
+        setPending(false);
+        router.replace("/notification-center");
+        return;
+      }
       // Never start capture unless the user explicitly tapped the consent
       // button and Android subsequently granted its special access.
       if (!fresh.setupPending || !fresh.accessGranted) {
@@ -91,7 +98,7 @@ export default function NotificationSetup() {
       setPending(Boolean(s.setupPending));
       const stored = sources.filter(source => source.packages.some(pkg => s.sources.includes(pkg))).map(s => s.id);
       if (stored.length > 0) setChosen(stored);
-      if (s.setupPending && s.accessGranted) void completeAfterPermission();
+      if ((s.setupPending || s.setupFinished) && s.accessGranted && (s.setupPending || s.recordingEnabled)) void completeAfterPermission();
     }).catch(() => setNotice("No se puede comunicar con el módulo nativo de Android."));
     const listener = AppState.addEventListener("change", state => {
       if (state === "active") void completeAfterPermission();
@@ -193,8 +200,8 @@ export default function NotificationSetup() {
           <Text style={styles.stepsTitle}>El siguiente paso</Text>
           <Text style={styles.stepsBody}>
             Se abrirán los ajustes especiales de Android. Busca Buscador y activa
-            “Acceso a notificaciones”. Al regresar, el historial se activará
-            automáticamente porque acabas de solicitarlo.
+            “Acceso a notificaciones”. Después de concederlo, Buscador iniciará
+            el historial de las tres fuentes que acabas de aceptar.
           </Text>
           <Text style={styles.stepsBody}>
             Si Android restringe el permiso por instalar una APK, revisa

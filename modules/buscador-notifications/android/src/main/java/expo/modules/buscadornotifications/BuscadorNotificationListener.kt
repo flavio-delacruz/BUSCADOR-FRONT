@@ -17,6 +17,19 @@ class BuscadorNotificationListener : NotificationListenerService() {
   override fun onListenerConnected() {
     super.onListenerConnected()
     connected = true
+    // Only activate the first-run archive if the user already pressed
+    // "Aceptar y configurar acceso", chose sources, and Android actually
+    // bound this service after the special access was granted.
+    try {
+      if (NotificationArchiveStore.setupPending(this) &&
+          !NotificationArchiveStore.setupFinished(this) &&
+          NotificationArchiveStore.selectedPackages(this).isNotEmpty()) {
+        NotificationArchiveStore.setEnabled(this, true)
+        NotificationArchiveStore.setSetupFinished(this, true)
+      }
+    } catch (_: Exception) {
+      // Do not handle or log private notification content here.
+    }
   }
 
   override fun onListenerDisconnected() {
