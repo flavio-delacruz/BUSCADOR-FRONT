@@ -14,7 +14,7 @@ abrir **Acceso a notificaciones** de Android. El servicio de Android
 empieza a registrar solo notificaciones nuevas de WhatsApp, Facebook y
 TikTok después de que el usuario acepte. No solicita accesibilidad,
 no registra teclado, no obtiene conversaciones antiguas, no envía mensajes
-a ningún servidor ni contiene SDK de analítica.
+a ningún servidor automáticamente ni contiene SDK de analítica.
 
 El historial utiliza AES-256-GCM con clave protegida por Android Keystore;
 se conservan como máximo 500 registros durante 30 días. La app permite
