@@ -1,0 +1,67 @@
+package com.flaviodelacruz.buscador
+
+data class Article(
+    val id: String,
+    val category: String,
+    val kicker: String,
+    val title: String,
+    val description: String,
+    val paragraphs: List<String>,
+    val tags: List<String>,
+    val minutes: Int,
+    val glyph: String
+)
+
+// Editorial examples carried over from the original React Native catalog;
+// these are not real-time news or sourced reporting.
+val articles = listOf(
+    Article("1","Tecnología","FUTURO CERCANO","La ciudad que aprende de sus habitantes",
+        "Sensores, movilidad y datos: cómo imaginar espacios urbanos que se adapten a las personas.",
+        listOf("Las ciudades inteligentes son mucho más que pantallas y semáforos conectados. El reto es utilizar la tecnología para mejorar la vida cotidiana y tomar decisiones públicas informadas.",
+        "Los sistemas de transporte, el consumo energético y la gestión del agua pueden analizarse de forma conjunta. Para hacerlo bien, también hacen falta normas claras de privacidad y participación ciudadana.",
+        "Esta lectura es un ejemplo editorial creado para la demostración de Buscador; no describe una noticia publicada hoy."),
+        listOf("ciudades","innovación","urbanismo"),4,"⌘"),
+    Article("2","Ciencia","NUEVAS PREGUNTAS","Lo que todavía no sabemos del océano",
+        "Una mirada a los misterios que siguen escondidos bajo la superficie.",
+        listOf("La exploración de las profundidades marinas sigue planteando preguntas fascinantes sobre ecosistemas, especies y procesos geológicos.",
+        "Los vehículos autónomos, los sensores y la observación científica ayudan a estudiar regiones donde es difícil mantener una presencia humana.",
+        "Este artículo es material de demostración y no representa un reporte científico actualizado."),
+        listOf("océano","exploración","ciencia"),3,"≈"),
+    Article("3","Ideas","CAMBIAR LA MIRADA","Aprender en la era de la inteligencia artificial",
+        "Qué habilidades ganan valor cuando las herramientas responden casi cualquier pregunta.",
+        listOf("Aprender ya no consiste únicamente en recordar información. Formular buenas preguntas, comparar fuentes y comprobar resultados se vuelve especialmente importante.",
+        "Una herramienta puede sugerir respuestas, pero la interpretación del contexto y la responsabilidad de cada decisión continúan siendo humanas.",
+        "Contenido de ejemplo para visualizar el formato de lectura de Buscador."),
+        listOf("educación","IA","aprendizaje"),5,"✳"),
+    Article("4","Mundo","CAMBIO URBANO","Repensar la movilidad de nuestras ciudades",
+        "Calles más caminables, transporte integrado y nuevas maneras de conectar barrios.",
+        listOf("La movilidad urbana puede entenderse como una red de decisiones que afecta al tiempo, al ambiente y a la calidad de vida.",
+        "Diseñar desplazamientos seguros implica escuchar a peatones, ciclistas, conductores y usuarios del transporte público.",
+        "Esta historia es un ejemplo educativo, no una noticia de última hora."),
+        listOf("transporte","ciudad","sostenibilidad"),4,"↗"),
+    Article("5","Cultura","CREATIVIDAD DIGITAL","Cuando el arte se encuentra con el código",
+        "Diseño generativo, experiencias interactivas y nuevas formas de crear.",
+        listOf("Los artistas y desarrolladores pueden crear juntos experiencias que combinan movimiento, sonido, visualización y participación del público.",
+        "La tecnología no sustituye la intención creativa: abre nuevas posibilidades para imaginar y experimentar.",
+        "Lectura ficticia de demostración para el diseño de esta aplicación."),
+        listOf("arte","diseño","creatividad"),3,"✦"),
+    Article("6","Tecnología","IDEAS QUE IMPORTAN","Baterías: una pieza del futuro energético",
+        "Por qué almacenar energía es tan importante como producirla.",
+        listOf("Las tecnologías de almacenamiento ayudan a utilizar la energía cuando se necesita, incluso si su producción no ocurre en ese momento.",
+        "Rendimiento, seguridad, materiales y reciclaje son aspectos que influyen en el desarrollo de mejores baterías.",
+        "Este contenido introductorio es ilustrativo y no anuncia un descubrimiento reciente."),
+        listOf("energía","tecnología","materiales"),4,"ϟ"),
+    Article("7","Ciencia","NUEVA PERSPECTIVA","Qué pueden enseñarnos los mapas de datos",
+        "La visualización transforma cifras complejas en preguntas comprensibles.",
+        listOf("Los datos adquieren significado cuando conocemos de dónde vienen, qué representan y cuáles son sus límites.",
+        "Una visualización bien construida puede revelar patrones, pero debe evitar escalas engañosas o comparaciones fuera de contexto.",
+        "Contenido ilustrativo, no basado en estadísticas de actualidad."),
+        listOf("datos","investigación","mapas"),3,"◈"),
+    Article("8","Ideas","EL PRÓXIMO PASO","Pequeños cambios, grandes experiencias",
+        "Cómo el diseño centrado en las personas transforma productos cotidianos.",
+        listOf("Un buen producto no necesita mostrar todas sus capacidades a la vez. Debe ayudar a completar tareas con claridad y confianza.",
+        "En diseño digital, la accesibilidad, la velocidad y el control del usuario resultan tan importantes como la apariencia.",
+        "Esta lectura pertenece al catálogo de demostración de Buscador."),
+        listOf("producto","experiencia","diseño"),3,"◎")
+)
+val topics = listOf("Tecnología","Ciencia","Mundo","Cultura","Ideas")

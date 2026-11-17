@@ -1,55 +1,43 @@
-# BUSCADOR-FRONT
+# Buscador — Android nativo Kotlin
 
-Buscador es un explorador editorial de ideas y contenido de muestra, realizado
-con React Native, Expo Router y TypeScript para Android.
+Migración del proyecto Expo/React Native a Android 100 % nativo,
+con **Kotlin, Jetpack Compose y NotificationListenerService**.
+No requiere Expo, Metro, React Native, Node.js ni EAS para compilar.
 
 ## Pantallas
-- **Hoy**, **Radar**, **Explorar**, **Guardados**: contenido editorial y búsqueda local.
-- **Ajustes**: privacidad y acceso al Centro de notificaciones.
-- **Centro de notificaciones**: acceso especial de Android, selección de fuentes,
-  activación/desactivación, historial local y borrado total.
-- **Detalle** y **Briefing**: lectura editorial de ejemplo.
+Inicio (Hoy), Radar, Explorar, Guardados, Ajustes, lectura y
+Centro de notificaciones, con identidad rojo/negro original.
 
-El catálogo de noticias es ficticio: no muestra actualidad real.
+## Notificaciones con permiso explícito
+En el primer inicio, la app explica su alcance y solicita al usuario
+abrir **Acceso a notificaciones** de Android. El servicio de Android
+empieza a registrar solo notificaciones nuevas de WhatsApp, Facebook y
+TikTok después de que el usuario acepte. No solicita accesibilidad,
+no registra teclado, no obtiene conversaciones antiguas, no envía mensajes
+a ningún servidor ni contiene SDK de analítica.
 
-## Historial autorizado de notificaciones
+El historial utiliza AES-256-GCM con clave protegida por Android Keystore;
+se conservan como máximo 500 registros durante 30 días. La app permite
+detener la captura, cambiar fuentes y borrar el archivo.
 
-El nuevo módulo Android (Kotlin) puede almacenar **solo nuevas notificaciones**
-que el sistema muestre procedentes de WhatsApp, Facebook, Messenger (mensajes de Facebook) y TikTok. No accede
-directamente a chats, no restaura mensajes en esas apps y no recupera contenido
-anterior a su activación. Se habilita únicamente tras seleccionar las fuentes,
-dar permiso de Android y activar el guardado en la app. El historial permanece
-cifrado localmente (AES-GCM / Android Keystore), máximo 500 registros/30 días.
-No se envía a MongoDB ni a otros servicios.
+## Compilación
+Android Studio: abrir este directorio como proyecto Gradle e instalar el SDK 35.
+Desde terminal con Gradle 8.11.1, JDK 17 y Android SDK configurados:
 
-Documentación técnica: [docs/notification-center.md](docs/notification-center.md)
-
-## Instalar actualización **nativa** (nueva APK)
-
-La APK anterior solo ejecuta la interfaz JavaScript. Tras incorporar el módulo
-Kotlin, debes generar e instalar otra APK una vez:
-
-```bash
-cd ~/BUSCADOR/frontend
-git pull --ff-only
-npm install --no-audit --no-fund
-npm run typecheck
-EAS_SKIP_AUTO_FINGERPRINT=1 npx eas-cli@latest build -p android --profile development
+```sh
+gradle :app:assembleDebug
 ```
 
-**El typecheck de GitHub revisa TypeScript, no Kotlin.** El módulo nativo
-todavía requiere comprobar que el nuevo EAS Build compile y funcione en
-un Android real.
+Para obtener una APK sin Android Studio ni EAS:
+GitHub Actions → **Kotlin Android APK** → Artifacts →
+**Buscador-Kotlin-Debug-APK**.
 
-Después de instalar la APK nueva, la edición habitual de TS/JS sigue usando:
+## Importante sobre la instalación
+Se conserva el applicationId `com.flaviodelacruz.buscador`, pero la APK
+de GitHub Actions se firma con una clave de depuración distinta de la
+firma de Expo. Android no permite actualizar la app instalada con otra
+firma. No la desinstales si necesitas conservar el archivo local, ya
+que no existe exportación de mensajes cifrados.
 
-```bash
-npx expo start --dev-client --localhost -c
-```
-
-## Privacidad
-El permiso de acceso a notificaciones es amplio a nivel de Android, por eso
-se filtra y conserva únicamente el texto de notificaciones de fuentes elegidas.
-Al detener el registro, Android puede conservar el permiso concedido:
-el usuario también puede revocarlo en los Ajustes del dispositivo.
-No se registra lo escrito en otras aplicaciones.
+La versión React Native anterior está preservada en la rama
+`backup/expo-sdk58-2026-11-17`.
