@@ -24,6 +24,8 @@ type ArchiveStatus = {
   serviceRegistered?: boolean;
   serviceConnected?: boolean;
   nativeBuild?: string;
+  setupPending?: boolean;
+  setupFinished?: boolean;
 };
 
 type ArchiveRecord = {
@@ -41,6 +43,8 @@ type ArchiveModule = {
   setSources(sources: string[]): Promise<boolean>;
   getRecords(): Promise<ArchiveRecord[]>;
   clearRecords(): Promise<boolean>;
+  setSetupPending(pending: boolean): Promise<boolean>;
+  setSetupFinished(finished: boolean): Promise<boolean>;
 };
 
 const native: ArchiveModule | null = Platform.OS === "android"
@@ -54,6 +58,12 @@ const sourceOptions = [
   { id: "messenger", name: "Messenger", packages: ["com.facebook.orca"], accent: "#B39CFF" },
   { id: "tiktok", name: "TikTok", packages: ["com.zhiliaoapp.musically"], accent: "#FF8DAB" }
 ] as const;
+
+const defaultSources = [
+  "com.whatsapp", "com.whatsapp.w4b",
+  "com.facebook.katana", "com.facebook.lite",
+  "com.zhiliaoapp.musically"
+];
 
 const initialStatus: ArchiveStatus = {
   accessGranted: false,
@@ -93,13 +103,29 @@ export default function NotificationCenter() {
     }
   }, []);
 
+  const finishPendingPermission = useCallback(async () => {
+    if (!native) return;
+    try {
+      const latest = await native.getStatus();
+      // A pending setup exists only after an explicit user action.
+      // Android may connect the listener before React Native resumes.
+      if (latest.setupPending && latest.accessGranted && latest.sources.length > 0) {
+        await native.setRecordingEnabled(true);
+        await native.setSetupFinished(true);
+      }
+    } catch {
+      setError("No se pudo completar la autorización. Revisa los permisos de Android.");
+    }
+    await refresh();
+  }, [refresh]);
+
   useEffect(() => {
-    void refresh();
+    void finishPendingPermission();
     const subscription = AppState.addEventListener("change", value => {
-      if (value === "active") void refresh();
+      if (value === "active") void finishPendingPermission();
     });
     return () => subscription.remove();
-  }, [refresh]);
+  }, [finishPendingPermission]);
 
   const granted = status.accessGranted;
   const recording = granted && status.recordingEnabled;
@@ -138,6 +164,32 @@ export default function NotificationCenter() {
       await native.openAccessSettings();
     } catch {
       Alert.alert("No disponible", "Abre Ajustes > Acceso especial > Acceso a notificaciones y busca Buscador.");
+    }
+  }
+
+  async function authorizeAndStart() {
+    if (!native || busy) return;
+    setBusy(true);
+    setError("");
+    try {
+      // Do not overwrite the user's existing individual source choices.
+      if (status.sources.length === 0) {
+        await native.setSources(defaultSources);
+      }
+      if (status.accessGranted) {
+        await native.setRecordingEnabled(true);
+        await native.setSetupFinished(true);
+        await refresh();
+      } else {
+        // This flag only follows the user's explicit "activate" tap.
+        await native.setSetupFinished(false);
+        await native.setSetupPending(true);
+        await native.openAccessSettings();
+      }
+    } catch {
+      Alert.alert("No se pudo activar", "Comprueba el acceso especial de Android y vuelve a intentarlo.");
+    } finally {
+      setBusy(false);
     }
   }
 
@@ -236,13 +288,20 @@ export default function NotificationCenter() {
             <View style={styles.controlCard}>
               <Text style={styles.controlTitle}>1. Autorizar en Android</Text>
               <Text style={styles.controlBody}>
-                El acceso a notificaciones es un permiso especial. Android puede conceder acceso
-                amplio a las notificaciones del dispositivo; Buscador filtra y almacena únicamente
-                las fuentes seleccionadas aquí.
+                Android solicita un permiso especial que debes conceder tú. Al activarlo,
+                Buscador guarda únicamente las notificaciones nuevas de las fuentes
+                seleccionadas. Si aún no elegiste ninguna, se configurarán automáticamente
+                WhatsApp, Facebook y TikTok. Todo permanece cifrado en este teléfono.
               </Text>
-              <Pressable onPress={openSettings} style={styles.permissionButton} accessibilityRole="button">
+              <Pressable
+                onPress={() => void (recording ? openSettings() : authorizeAndStart())}
+                disabled={busy}
+                style={[styles.permissionButton, busy && styles.disabled]}
+                accessibilityRole="button"
+                accessibilityLabel={recording ? "Revisar permiso Android" : "Activar acceso y captura de notificaciones"}
+              >
                 <Text style={styles.permissionLabel}>
-                  {granted ? "REVISAR PERMISO DEL SISTEMA" : "ABRIR AJUSTES DE PERMISO"}  ↗
+                  {recording ? "REVISAR PERMISO DEL SISTEMA" : granted ? "ACTIVAR CAPTURA" : "ACTIVAR ACCESO Y CAPTURA"}  ↗
                 </Text>
               </Pressable>
               <Text style={styles.permissionState}>{granted ? "✓ Permiso concedido por Android" : "• Aún no autorizado"}</Text>
