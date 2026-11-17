@@ -16,10 +16,10 @@ android {
     }
     buildTypes {
         debug {
-            // Coexist with the previously installed Expo-signed Buscador.
-            applicationIdSuffix = ".debug"
+            // Side-by-side trial: do not overwrite previous Expo or Kotlin debug archives.
+            applicationIdSuffix = ".sync"
             versionNameSuffix = "-debug"
-            resValue("string", "app_name", "Buscador Kotlin (prueba)")
+            resValue("string", "app_name", "Buscador Sync (prueba)")
         }
         release {
             resValue("string", "app_name", "Buscador")
