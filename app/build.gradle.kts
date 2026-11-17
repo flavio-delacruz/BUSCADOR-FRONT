@@ -15,7 +15,14 @@ android {
         versionName = "2.0.0"
     }
     buildTypes {
+        debug {
+            // Coexist with the previously installed Expo-signed Buscador.
+            applicationIdSuffix = ".debug"
+            versionNameSuffix = "-debug"
+            resValue("string", "app_name", "Buscador Kotlin (prueba)")
+        }
         release {
+            resValue("string", "app_name", "Buscador")
             isMinifyEnabled = false
             isShrinkResources = false
         }
