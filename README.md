@@ -33,7 +33,11 @@ GitHub Actions → **Kotlin Android APK** → Artifacts →
 **Buscador-Kotlin-Debug-APK**.
 
 ## Importante sobre la instalación
-Se conserva el applicationId `com.flaviodelacruz.buscador`, pero la APK
+La compilación **debug** utiliza el paquete
+`com.flaviodelacruz.buscador.debug` y aparece como **Buscador Kotlin (prueba)**:
+puede instalarse junto a la app antigua sin desinstalarla.
+La compilación de **producción** conserva el applicationId
+`com.flaviodelacruz.buscador`, pero la APK
 de GitHub Actions se firma con una clave de depuración distinta de la
 firma de Expo. Android no permite actualizar la app instalada con otra
 firma. No la desinstales si necesitas conservar el archivo local, ya
