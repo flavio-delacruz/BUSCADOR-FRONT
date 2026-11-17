@@ -34,8 +34,8 @@ GitHub Actions → **Kotlin Android APK** → Artifacts →
 
 ## Importante sobre la instalación
 La compilación **debug** utiliza el paquete
-`com.flaviodelacruz.buscador.debug` y aparece como **Buscador Kotlin (prueba)**:
-puede instalarse junto a la app antigua sin desinstalarla.
+`com.flaviodelacruz.buscador.sync` y aparece como **Buscador Sync (prueba)**:
+puede instalarse junto a la app anterior de Expo y la APK Kotlin de prueba sin desinstalarlas. La nueva instalación comienza con un archivo local vacío y debes autorizar su propio acceso a notificaciones.
 La compilación de **producción** conserva el applicationId
 `com.flaviodelacruz.buscador`, pero la APK
 de GitHub Actions se firma con una clave de depuración distinta de la
@@ -59,3 +59,8 @@ El backend solo acepta vistas previas de notificaciones autorizadas; no lee
 mensajes enviados desde los chats de otras apps. La API se encuentra diseñada
 como prototipo de un solo propietario, no para distribuir el token con una APK
 pública. Usa una instancia HTTPS privada y controla quién puede acceder.
+
+**Firma de prueba:** las compilaciones de GitHub Actions pueden usar certificados
+`debug` diferentes. No desinstales tus APK anteriores si quieres conservar sus
+notificaciones. Este sufijo de prueba evita sobreescribirlas; para actualizaciones
+estables necesitamos una clave de firma persistente y protegida.
