@@ -220,6 +220,9 @@ fun NotificationCenterScreen(
             }
         }
 
+        Spacer(Modifier.height(21.dp))
+        ManualSyncCard(records)
+
         if (error != null) {
             Spacer(Modifier.height(12.dp))
             BodyText(error, Red)
@@ -228,7 +231,7 @@ fun NotificationCenterScreen(
         SurfacePanel {
             Label("PRIVACIDAD Y CONTROL", Cyan)
             Spacer(Modifier.height(9.dp))
-            BodyText("Buscador no envía el contenido a Internet, no accede a chats completos y no recupera notificaciones anteriores ni textos ocultos por Android.")
+            BodyText("Buscador conserva el contenido localmente, salvo que autorices y confirmes explícitamente un envío mediante la opción de sincronización. No accede a chats completos ni recupera textos ocultos por Android.")
             Spacer(Modifier.height(12.dp))
             Text(
                 "BORRAR TODO EL HISTORIAL LOCAL",

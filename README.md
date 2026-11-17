@@ -14,7 +14,7 @@ abrir **Acceso a notificaciones** de Android. El servicio de Android
 empieza a registrar solo notificaciones nuevas de WhatsApp, Facebook y
 TikTok después de que el usuario acepte. No solicita accesibilidad,
 no registra teclado, no obtiene conversaciones antiguas, no envía mensajes
-a ningún servidor ni contiene SDK de analítica.
+a ningún servidor automáticamente ni contiene SDK de analítica.
 
 El historial utiliza AES-256-GCM con clave protegida por Android Keystore;
 se conservan como máximo 500 registros durante 30 días. La app permite
@@ -34,8 +34,8 @@ GitHub Actions → **Kotlin Android APK** → Artifacts →
 
 ## Importante sobre la instalación
 La compilación **debug** utiliza el paquete
-`com.flaviodelacruz.buscador.debug` y aparece como **Buscador Kotlin (prueba)**:
-puede instalarse junto a la app antigua sin desinstalarla.
+`com.flaviodelacruz.buscador.sync` y aparece como **Buscador Sync (prueba)**:
+puede instalarse junto a la app anterior de Expo y la APK Kotlin de prueba sin desinstalarlas. La nueva instalación comienza con un archivo local vacío y debes autorizar su propio acceso a notificaciones.
 La compilación de **producción** conserva el applicationId
 `com.flaviodelacruz.buscador`, pero la APK
 de GitHub Actions se firma con una clave de depuración distinta de la
@@ -45,3 +45,22 @@ que no existe exportación de mensajes cifrados.
 
 La versión React Native anterior está preservada en la rama
 `backup/expo-sdk58-2026-11-17`.
+
+## Sincronización remota manual (opcional)
+
+El backend en `BUSCADOR-BACK` expone `POST /api/notifications/sync`
+tras configurar MongoDB y secretos en sus variables de entorno.
+En el Centro de notificaciones, introduce una URL base **HTTPS** y el token
+privado generado por tu servidor. Marca la casilla de autorización y
+confirma el envío. La app nunca sincroniza automáticamente, ni guarda el
+token tras la operación, ni permite usar HTTP sin cifrado.
+
+El backend solo acepta vistas previas de notificaciones autorizadas; no lee
+mensajes enviados desde los chats de otras apps. La API se encuentra diseñada
+como prototipo de un solo propietario, no para distribuir el token con una APK
+pública. Usa una instancia HTTPS privada y controla quién puede acceder.
+
+**Firma de prueba:** las compilaciones de GitHub Actions pueden usar certificados
+`debug` diferentes. No desinstales tus APK anteriores si quieres conservar sus
+notificaciones. Este sufijo de prueba evita sobreescribirlas; para actualizaciones
+estables necesitamos una clave de firma persistente y protegida.
