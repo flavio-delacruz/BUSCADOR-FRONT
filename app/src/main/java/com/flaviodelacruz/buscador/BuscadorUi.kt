@@ -461,7 +461,7 @@ fun SettingsScreen(status: ArchiveSnapshot, onPage: (String) -> Unit) {
             Spacer(Modifier.height(9.dp))
             BodyText("Historial: archivos cifrados y Android Keystore")
             Spacer(Modifier.height(9.dp))
-            BodyText("Conexión: sin sincronización ni envío a servidores")
+            BodyText("Conexión: envío remoto solo con autorización manual")
             Spacer(Modifier.height(9.dp))
             BodyText("Contenido editorial: solo demostración")
         }
