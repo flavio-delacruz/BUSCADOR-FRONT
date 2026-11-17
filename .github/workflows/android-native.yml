@@ -66,3 +66,10 @@ jobs:
           unzip -p "$APK" 'classes*.dex' | strings | grep -Fq 'BuscadorNotificationsLegacy'
           echo 'PASS: explicitly registered React Native native module present in release dex'
           echo 'PASS: notification listener present in release manifest'
+      - name: Publish installable test APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: Buscador-Android-test-APK
+          path: android/app/build/outputs/apk/release/*.apk
+          if-no-files-found: error
+          retention-days: 7
