@@ -45,3 +45,17 @@ que no existe exportación de mensajes cifrados.
 
 La versión React Native anterior está preservada en la rama
 `backup/expo-sdk58-2026-11-17`.
+
+## Sincronización remota manual (opcional)
+
+El backend en `BUSCADOR-BACK` expone `POST /api/notifications/sync`
+tras configurar MongoDB y secretos en sus variables de entorno.
+En el Centro de notificaciones, introduce una URL base **HTTPS** y el token
+privado generado por tu servidor. Marca la casilla de autorización y
+confirma el envío. La app nunca sincroniza automáticamente, ni guarda el
+token tras la operación, ni permite usar HTTP sin cifrado.
+
+El backend solo acepta vistas previas de notificaciones autorizadas; no lee
+mensajes enviados desde los chats de otras apps. La API se encuentra diseñada
+como prototipo de un solo propietario, no para distribuir el token con una APK
+pública. Usa una instancia HTTPS privada y controla quién puede acceder.
