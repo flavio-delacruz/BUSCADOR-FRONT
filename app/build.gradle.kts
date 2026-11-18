@@ -19,7 +19,7 @@ android {
             // Side-by-side trial: do not overwrite previous Expo or Kotlin debug archives.
             applicationIdSuffix = ".autosync"
             versionNameSuffix = "-debug"
-            resValue("string", "app_name", "Buscador Auto (prueba)")
+            resValue("string", "app_name", "Buscador")
         }
         release {
             resValue("string", "app_name", "Buscador")
