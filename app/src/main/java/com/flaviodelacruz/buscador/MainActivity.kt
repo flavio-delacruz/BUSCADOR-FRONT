@@ -138,6 +138,8 @@ class MainActivity : ComponentActivity() {
         try { completePendingConsent() }
         catch (_: Exception) { /* Consent is still visible and retryable. */ }
         reload()
+        // Recover pending, explicitly consented remote-sync jobs after returning online.
+        NotificationAutoSyncWorker.enqueue(this)
     }
 
     private fun openAccessSettings() {
