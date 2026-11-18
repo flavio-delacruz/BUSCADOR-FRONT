@@ -4,9 +4,24 @@ Migración del proyecto Expo/React Native a Android 100 % nativo,
 con **Kotlin, Jetpack Compose y NotificationListenerService**.
 No requiere Expo, Metro, React Native, Node.js ni EAS para compilar.
 
-## Pantallas
-Inicio (Hoy), Radar, Explorar, Guardados, Ajustes, lectura y
-Centro de notificaciones, con identidad rojo/negro original.
+## Pantallas y nuevo logo
+
+La experiencia tiene seis pantallas iniciales: (1) Splash animado con
+el monograma B rojo y la lupa blanca integrada, (2) Descubre, (3) Explora,
+(4) Radar, (5) Privacidad + inicio de sesión/registro y (6) Inicio.
+Las diapositivas explicativas anteceden a la pantalla de acceso.
+
+Tras el acceso, se mantienen las secciones Hoy, Radar, Explorar, Guardados,
+Ajustes, lectura y Centro de notificaciones, y el mismo estilo oscuro/rojo.
+La ilustración del icono está dibujada como vector Android editable.
+
+**Cuentas reales:** introducir un backend Express/MongoDB con HTTPS en la
+pantalla de inicio de sesión. El backend ahora admite correo/contraseña,
+registro, inicio de sesión y cierre de sesión; el token de sesión se guarda
+cifrado en Android Keystore. Sin servidor configurado, se puede continuar como
+invitado y mantener todas las funciones locales. Las cuentas y el token del
+respaldo remoto son mecanismos separados: iniciar sesión jamás concede
+el permiso de notificaciones ni activa una subida a MongoDB.
 
 ## Notificaciones con permiso explícito
 En el primer inicio, la app explica su alcance y solicita al usuario
@@ -34,7 +49,7 @@ GitHub Actions → **Kotlin Android APK** → Artifacts →
 
 ## Importante sobre la instalación
 La compilación **debug** utiliza el paquete
-`com.flaviodelacruz.buscador.autosync` y aparece como **Buscador**:
+`com.flaviodelacruz.buscador.welcome` y aparece como **Buscador**:
 puede instalarse junto a la app anterior de Expo y la APK Kotlin de prueba sin desinstalarlas. La nueva instalación comienza con un archivo local vacío y debes autorizar su propio acceso a notificaciones.
 La compilación de **producción** conserva el applicationId
 `com.flaviodelacruz.buscador`, pero la APK
@@ -78,3 +93,13 @@ en una aplicación distribuida. No subas notificaciones ajenas sin autorización
 `debug` diferentes. No desinstales tus APK anteriores si quieres conservar sus
 notificaciones. Este sufijo de prueba evita sobreescribirlas; para actualizaciones
 estables necesitamos una clave de firma persistente y protegida.
+
+## Compatibilidad y diseño de la nueva prueba
+
+El APK de prueba `com.flaviodelacruz.buscador.welcome` se instala junto a
+versiones anteriores con sus propias notificaciones y permisos; no sobrescribe
+el archivo cifrado de otras instalaciones. La versión de producción mantiene
+`com.flaviodelacruz.buscador` pero requiere firma estable para actualizarse.
+El motor `BuscadorNotificationListener`, su almacenamiento AES-GCM,
+WorkManager y las rutas de MongoDB permanecen intactos; el rediseño es de
+interfaz y añade autenticación independiente.
