@@ -125,17 +125,11 @@ private val pages = listOf(
     OnboardingSlide(
         "02 · UN MUNDO DE IDEAS",
         "Todo comienza", "buscando.",
-        "Explora tecnología, ciencia, cultura y nuevas perspectivas desde un solo lugar.",
+        "Explora ciencia, tecnología y cultura, y descubre señales desde nuestro radar de ideas.",
         "⌕", Cyan
     ),
     OnboardingSlide(
-        "03 · TU PROPIO RADAR",
-        "Conecta señales.", "Descubre más.",
-        "Un radar visual y lecturas seleccionadas para profundizar en aquello que te interesa.",
-        "◉", Lilac
-    ),
-    OnboardingSlide(
-        "04 · PRIVACIDAD BAJO CONTROL",
+        "03 · PRIVACIDAD BAJO CONTROL",
         "Tus datos.", "Tus decisiones.",
         "El historial de notificaciones requiere permiso de Android; el envío al servidor se autoriza por separado y puede desactivarse.",
         "♢", Rose
@@ -158,7 +152,6 @@ fun IntroExperience(
     when {
         step == 0 -> SplashScreen()
         step in 1..3 -> IntroSlide(slide = pages[step - 1], number = step, onContinue = { step++ }, onSkip = { step = 4 })
-        step == 4 -> IntroSlide(slide = pages[3], number = 4, onContinue = { step = 5 }, onSkip = { step = 5 })
         else -> AccountEntry(onGuest, onSignedIn, showGuest = true)
     }
 }
@@ -231,9 +224,9 @@ private fun IntroSlide(
                     )
                 }
             }
-            FeatureIllustration(number, slide.accent)
+            FeatureIllustration(if (number == 3) 4 else number, slide.accent)
             Text(
-                "%02d / 04".format(number),
+                "%02d / 03".format(number),
                 modifier = Modifier.align(Alignment.TopEnd).padding(18.dp),
                 color = Muted, fontSize = 11.sp, fontWeight = FontWeight.Bold
             )
@@ -247,7 +240,7 @@ private fun IntroSlide(
         BodyText(slide.description)
         Spacer(Modifier.weight(1f))
         Row(horizontalArrangement = Arrangement.spacedBy(7.dp), modifier = Modifier.padding(bottom = 20.dp)) {
-            repeat(4) { index ->
+            repeat(3) { index ->
                 Box(
                     Modifier.width(if (index == number - 1) 29.dp else 7.dp)
                         .height(6.dp)
@@ -255,7 +248,7 @@ private fun IntroSlide(
                 )
             }
         }
-        RedAction(if (number == 4) "IR A MI CUENTA  →" else "CONTINUAR  →", onClick = onContinue)
+        RedAction(if (number == 3) "IR A MI CUENTA  →" else "CONTINUAR  →", onClick = onContinue)
     }
 }
 
