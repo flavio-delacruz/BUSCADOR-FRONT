@@ -6,10 +6,10 @@ No requiere Expo, Metro, React Native, Node.js ni EAS para compilar.
 
 ## Pantallas y nuevo logo
 
-La experiencia tiene seis pantallas iniciales: (1) Splash animado con
-el monograma B rojo y la lupa blanca integrada, (2) Descubre, (3) Explora,
-(4) Radar, (5) Privacidad + inicio de sesión/registro y (6) Inicio.
-Las diapositivas explicativas anteceden a la pantalla de acceso.
+La experiencia tiene seis pantallas: (1) Splash animado con el monograma B
+rojo y la lupa blanca integrada, (2) Descubre, (3) Explora y Radar,
+(4) Privacidad, (5) Inicio de sesión / Registro, (6) Inicio de Buscador.
+Las tres diapositivas explicativas anteceden a la pantalla de acceso.
 
 Tras el acceso, se mantienen las secciones Hoy, Radar, Explorar, Guardados,
 Ajustes, lectura y Centro de notificaciones, y el mismo estilo oscuro/rojo.
