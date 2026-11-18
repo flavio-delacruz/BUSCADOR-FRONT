@@ -33,10 +33,14 @@ jobs:
           "$AAPT" dump xmltree "$APK" AndroidManifest.xml | grep -A 6 'BuscadorNotificationListener'
           unzip -p "$APK" 'classes*.dex' | strings | grep -Fq 'BuscadorNotificationListener'
           echo "Kotlin NotificationListenerService packaged in APK"
+      - name: Name installable package Buscador.apk
+        run: |
+          mkdir -p dist
+          cp app/build/outputs/apk/debug/app-debug.apk dist/Buscador.apk
       - name: Upload native Android APK
         uses: actions/upload-artifact@v4
         with:
-          name: Buscador-Kotlin-Debug-APK
-          path: app/build/outputs/apk/debug/app-debug.apk
+          name: Buscador
+          path: dist/Buscador.apk
           if-no-files-found: error
           retention-days: 14
