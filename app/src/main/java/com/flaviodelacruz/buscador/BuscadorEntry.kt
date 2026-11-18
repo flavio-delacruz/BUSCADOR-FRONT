@@ -231,10 +231,7 @@ private fun IntroSlide(
                     )
                 }
             }
-            Text(
-                slide.glyph, color = slide.accent, fontSize = 106.sp,
-                fontWeight = FontWeight.Black
-            )
+            FeatureIllustration(number, slide.accent)
             Text(
                 "%02d / 04".format(number),
                 modifier = Modifier.align(Alignment.TopEnd).padding(18.dp),
@@ -259,6 +256,101 @@ private fun IntroSlide(
             }
         }
         RedAction(if (number == 4) "IR A MI CUENTA  →" else "CONTINUAR  →", onClick = onContinue)
+    }
+}
+
+@Composable
+private fun FeatureIllustration(page: Int, accent: Color) {
+    when (page) {
+        1 -> {
+            Column(Modifier.fillMaxWidth().padding(horizontal = 39.dp), horizontalAlignment = Alignment.Start) {
+                Label("TU PORTADA · SELECCIÓN", accent)
+                Spacer(Modifier.height(12.dp))
+                Row(
+                    Modifier.fillMaxWidth()
+                        .background(Color(0xFF262230), RoundedCornerShape(15.dp))
+                        .border(1.dp, accent.copy(alpha = 0.35f), RoundedCornerShape(15.dp))
+                        .padding(14.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Box(Modifier.size(54.dp).background(accent.copy(alpha = 0.18f), RoundedCornerShape(15.dp)),
+                        contentAlignment = Alignment.Center) {
+                        Text("✦", color = accent, fontSize = 34.sp)
+                    }
+                    Spacer(Modifier.width(12.dp))
+                    Column {
+                        Text("NUEVAS MIRADAS", color = accent, fontSize = 9.sp, fontWeight = FontWeight.Black)
+                        Text("Ideas que inspiran", color = White, fontSize = 16.sp, fontWeight = FontWeight.Black)
+                        BodyText("Tecnología, cultura y más", Soft)
+                    }
+                }
+                Spacer(Modifier.height(12.dp))
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    listOf("ACTUALIDAD", "DESCUBRIR", "LECTURAS").forEach {
+                        Box(Modifier.background(PanelAlt, RoundedCornerShape(10.dp)).padding(9.dp)) {
+                            Text(it, fontWeight = FontWeight.Bold, fontSize = 9.sp, color = Muted)
+                        }
+                    }
+                }
+            }
+        }
+        2 -> {
+            Column(Modifier.fillMaxWidth().padding(horizontal = 33.dp)) {
+                Text("¿QUÉ QUIERES EXPLORAR?", color = accent, fontSize = 11.sp, fontWeight = FontWeight.Black)
+                Spacer(Modifier.height(15.dp))
+                Row(
+                    Modifier.fillMaxWidth().background(PanelAlt, RoundedCornerShape(15.dp))
+                        .border(1.dp, accent.copy(alpha = 0.4f), RoundedCornerShape(15.dp))
+                        .padding(16.dp), verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text("⌕", color = accent, fontSize = 28.sp, fontWeight = FontWeight.Black)
+                    Spacer(Modifier.width(10.dp))
+                    Text("Una idea, un tema, una historia…", color = Muted, fontSize = 12.sp)
+                }
+                Spacer(Modifier.height(14.dp))
+                Row(horizontalArrangement = Arrangement.spacedBy(7.dp)) {
+                    listOf("Ciencia", "Tecnología", "Cultura").forEach {
+                        Box(
+                            Modifier.background(Color(0xFF182637), RoundedCornerShape(8.dp))
+                                .padding(horizontal = 10.dp, vertical = 9.dp)
+                        ) { Text(it, color = White, fontSize = 10.sp, fontWeight = FontWeight.Bold) }
+                    }
+                }
+            }
+        }
+        3 -> {
+            Box(Modifier.size(185.dp), contentAlignment = Alignment.Center) {
+                Canvas(Modifier.fillMaxSize()) {
+                    listOf(0.46f, 0.34f, 0.21f).forEach {
+                        drawCircle(accent.copy(alpha = 0.35f), radius = size.minDimension * it,
+                            style = Stroke(width = 1.8.dp.toPx()))
+                    }
+                    drawCircle(Red, radius = 5.dp.toPx(),
+                        center = androidx.compose.ui.geometry.Offset(size.width * 0.28f, size.height * 0.33f))
+                    drawCircle(Cyan, radius = 5.dp.toPx(),
+                        center = androidx.compose.ui.geometry.Offset(size.width * 0.75f, size.height * 0.43f))
+                }
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text("B", color = accent, fontSize = 52.sp, fontWeight = FontWeight.Black)
+                    Text("RADAR ACTIVO", color = White, fontSize = 9.sp, fontWeight = FontWeight.Black)
+                }
+            }
+        }
+        else -> {
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Box(Modifier.size(88.dp)
+                    .background(accent.copy(alpha = 0.17f), CircleShape)
+                    .border(1.dp, accent.copy(alpha = 0.5f), CircleShape),
+                    contentAlignment = Alignment.Center) {
+                    Text("✓", color = accent, fontWeight = FontWeight.Black, fontSize = 52.sp)
+                }
+                Spacer(Modifier.height(12.dp))
+                Text("SOLO CON TU PERMISO", color = White, fontWeight = FontWeight.Black, fontSize = 15.sp)
+                Spacer(Modifier.height(10.dp))
+                Text("CIFRADO LOCAL  ·  CONTROL DE ENVÍOS", color = accent, fontSize = 9.sp,
+                    fontWeight = FontWeight.Bold)
+            }
+        }
     }
 }
 
