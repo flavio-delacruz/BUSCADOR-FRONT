@@ -42,7 +42,6 @@ import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.graphics.drawscope.clipRect
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
@@ -130,7 +129,10 @@ fun NyvaraApprovedLogo(modifier: Modifier = Modifier, side: Dp = 86.dp, animated
         contentScale = ContentScale.Fit,
         modifier = modifier.size(side)
             .drawWithContent {
-                clipRect(right = size.width * progress) { drawContent() }
+                drawContext.canvas.save()
+                drawContext.canvas.clipRect(0f, 0f, size.width * progress, size.height)
+                drawContent()
+                drawContext.canvas.restore()
             }
     )
 }
