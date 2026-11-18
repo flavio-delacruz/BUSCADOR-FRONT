@@ -1,5 +1,6 @@
 package com.flaviodelacruz.buscador
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -109,15 +110,15 @@ fun AutoSyncCard() {
                         if (turnOn) {
                             if (!agreed) {
                                 feedback = "Confirma primero tu autorización de sincronización remota."
-                                return@Switch
+                            } else {
+                                AutoSyncSettings.enable(context, server, token)
+                                token = "" // The token now exists only in Keystore-encrypted local storage.
+                                server = ""
+                                agreed = false
+                                enabled = true
+                                feedback = "Autorizada. Los próximos avisos se enviarán automáticamente."
+                                NotificationAutoSyncWorker.enqueue(context)
                             }
-                            AutoSyncSettings.enable(context, server, token)
-                            token = "" // The token now exists only in Keystore-encrypted local storage.
-                            server = ""
-                            agreed = false
-                            enabled = true
-                            feedback = "Autorizada. Los próximos avisos se enviarán automáticamente."
-                            NotificationAutoSyncWorker.enqueue(context)
                         } else {
                             // Disables uploads immediately and clears credentials and queued jobs.
                             AutoSyncSettings.disable(context)
@@ -143,7 +144,6 @@ fun AutoSyncCard() {
                 color = Cyan, fontSize = 10.sp, fontWeight = FontWeight.Black,
                 modifier = Modifier
                     .padding(vertical = 7.dp)
-                    .then(Modifier)
                     .clickable { workerStatus = AutoSyncSettings.status(context) }
             )
             if (workerStatus.isNotBlank()) BodyText(workerStatus, Soft)
