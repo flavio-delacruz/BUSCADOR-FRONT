@@ -14,7 +14,8 @@ import javax.crypto.spec.GCMParameterSpec
 
 /**
  * The archive stays on this device. The Android Keystore key is not exportable.
- * Never send notification content to a backend or analytics provider.
+ * Remote sync, when explicitly enabled, reads already encrypted local records and
+ * sends eligible new entries via the authorized HTTPS worker. Never embed secrets here.
  */
 internal object NotificationArchiveStore {
   private val lock = Any()
@@ -117,15 +118,15 @@ internal object NotificationArchiveStore {
     }
   }
 
-  fun append(context: Context, pkg: String, title: String, message: String) {
-    if (!packages.contains(pkg) || !isEnabled(context) || !selectedPackages(context).contains(pkg)) return
+  fun append(context: Context, pkg: String, title: String, message: String): Boolean {
+    if (!packages.contains(pkg) || !isEnabled(context) || !selectedPackages(context).contains(pkg)) return false
     val safeMessage = message.trim().take(2048)
-    if (safeMessage.isEmpty()) return
+    if (safeMessage.isEmpty()) return false
     val safeTitle = title.trim().take(160)
     val now = System.currentTimeMillis()
 
     synchronized(lock) {
-      if (!isEnabled(context) || !selectedPackages(context).contains(pkg)) return
+      if (!isEnabled(context) || !selectedPackages(context).contains(pkg)) return false
       val current = readArray(context)
       val output = JSONArray()
       val cutoff = now - lifetimeMillis
@@ -139,7 +140,7 @@ internal object NotificationArchiveStore {
           recent.optString("title") == safeTitle &&
           recent.optString("message") == safeMessage &&
           now - recent.optLong("time") < 8000L) {
-        return
+        return false
       }
       val record = JSONObject()
         .put("id", now.toString() + "_" + java.util.UUID.randomUUID().toString())
@@ -153,6 +154,7 @@ internal object NotificationArchiveStore {
         bounded.put(output.getJSONObject(index))
       }
       saveArray(context, bounded)
+      return true
     }
   }
 

@@ -6,7 +6,8 @@ import android.service.notification.StatusBarNotification
 
 /**
  * User-controlled local backup of notification previews, not access to chats.
- * Only supported source packages are considered; no network or telemetry.
+ * Only supported source packages are considered. The optional, user-authorized
+ * remote-sync Worker runs separately and never blocks this callback.
  */
 class BuscadorNotificationListener : NotificationListenerService() {
   companion object {
@@ -72,7 +73,9 @@ class BuscadorNotificationListener : NotificationListenerService() {
 
     if (body.isBlank()) return
     try {
-      NotificationArchiveStore.append(this, sbn.packageName, title, body)
+      if (NotificationArchiveStore.append(this, sbn.packageName, title, body)) {
+        NotificationAutoSyncWorker.enqueue(this)
+      }
     } catch (_: Exception) {
       // Fail closed: never publish private content to logs if storage fails.
     }
