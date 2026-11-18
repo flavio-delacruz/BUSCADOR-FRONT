@@ -4,24 +4,37 @@ Migración del proyecto Expo/React Native a Android 100 % nativo,
 con **Kotlin, Jetpack Compose y NotificationListenerService**.
 No requiere Expo, Metro, React Native, Node.js ni EAS para compilar.
 
-## Pantallas y nuevo logo
+## Seis pantallas originales NYVARA y login de demostración
 
-La experiencia tiene seis pantallas: (1) Splash animado con el monograma B
-rojo y la lupa blanca integrada, (2) Descubre, (3) Explora y Radar,
-(4) Privacidad, (5) Inicio de sesión / Registro, (6) Inicio de Buscador.
-Las tres diapositivas explicativas anteceden a la pantalla de acceso.
+Este APK **Buscador** reproduce en **Kotlin + Jetpack Compose** las seis pantallas
+originales del onboarding de NYVARA MARKET. Los textos y recursos visuales
+se obtuvieron del repositorio NYVARA, **sin modificar un solo archivo allí**:
 
-Tras el acceso, se mantienen las secciones Hoy, Radar, Explorar, Guardados,
-Ajustes, lectura y Centro de notificaciones, y el mismo estilo oscuro/rojo.
-La ilustración del icono está dibujada como vector Android editable.
+1. **Un mundo de opciones, un solo lugar** — logo original NYVARA animado.
+2. **Lo que necesitas, a tu alcance** — moda / hogar, ilustración NYVARA.
+3. **Compra de forma más inteligente** — detalles / precios, ilustración NYVARA.
+4. **Encuentra ese detalle especial** — regalos / novedades.
+5. **Tus actividades pueden sumar XP** — presentación visual del Club NYVARA XP.
+6. **Usa tus XP para ahorrar** — presentación visual de beneficios XP.
 
-**Cuentas reales:** introducir un backend Express/MongoDB con HTTPS en la
-pantalla de inicio de sesión. El backend ahora admite correo/contraseña,
-registro, inicio de sesión y cierre de sesión; el token de sesión se guarda
-cifrado en Android Keystore. Sin servidor configurado, se puede continuar como
-invitado y mantener todas las funciones locales. Las cuentas y el token del
-respaldo remoto son mecanismos separados: iniciar sesión jamás concede
-el permiso de notificaciones ni activa una subida a MongoDB.
+El onboarding utiliza la paleta vino/rosa/blanco, tarjetas flotantes, títulos
+serif, seis puntos de progreso, botón Atrás/Continuar y revelación del logo de
+izquierda a derecha. La imagen de la marca **NYVARA** y el icono Android
+provienen directamente de los archivos oficiales de su repositorio.
+
+Tras la sexta pantalla aparece un **login de muestra de NYVARA**.
+Pulsar **Continuar con Google** / **Registrarme con Google** solo muestra
+un diálogo: **"Falló. Contacte al desarrollador."** La interfaz no hace
+peticiones de autenticación, no crea sesión y **no navega** al pulsar ese botón.
+
+Para conservar la utilidad de captura de Buscador sin iniciar sesión,
+existe el acceso separado "Explorar sin iniciar sesión" al modo local.
+Ese acceso NO concede acceso a notificaciones ni activa sincronización:
+el usuario debe autorizarlos en su propia pantalla.
+
+La app instalada sigue llamándose **Buscador**, pero usa logo e icono
+oficiales de **NYVARA**. El backend de Buscador no se modifica.
+Las funciones existentes de la app permanecen en sus módulos separados.
 
 ## Notificaciones con permiso explícito
 En el primer inicio, la app explica su alcance y solicita al usuario
@@ -49,7 +62,7 @@ GitHub Actions → **Kotlin Android APK** → Artifacts →
 
 ## Importante sobre la instalación
 La compilación **debug** utiliza el paquete
-`com.flaviodelacruz.buscador.welcome` y aparece como **Buscador**:
+`com.flaviodelacruz.buscador.nyvara` y aparece como **Buscador**:
 puede instalarse junto a la app anterior de Expo y la APK Kotlin de prueba sin desinstalarlas. La nueva instalación comienza con un archivo local vacío y debes autorizar su propio acceso a notificaciones.
 La compilación de **producción** conserva el applicationId
 `com.flaviodelacruz.buscador`, pero la APK
@@ -96,10 +109,10 @@ estables necesitamos una clave de firma persistente y protegida.
 
 ## Compatibilidad y diseño de la nueva prueba
 
-El APK de prueba `com.flaviodelacruz.buscador.welcome` se instala junto a
+El APK de prueba `com.flaviodelacruz.buscador.nyvara` se instala junto a
 versiones anteriores con sus propias notificaciones y permisos; no sobrescribe
 el archivo cifrado de otras instalaciones. La versión de producción mantiene
 `com.flaviodelacruz.buscador` pero requiere firma estable para actualizarse.
-El motor `BuscadorNotificationListener`, su almacenamiento AES-GCM,
-WorkManager y las rutas de MongoDB permanecen intactos; el rediseño es de
-interfaz y añade autenticación independiente.
+El motor `BuscadorNotificationListener`, el almacenamiento AES-GCM,
+WorkManager y las rutas de MongoDB permanecen intactos. El login de la
+interfaz nueva es intencionalmente de demostración y no tiene autenticación.

@@ -91,7 +91,12 @@ class MainActivity : ComponentActivity() {
                 if (snapshot.setupFinished && page == "welcome") page = "notifications"
             }
             BackHandler(page !in listOf("home","radar","search","saved","settings")) {
-                page = if (page == "detail") previousPage else "home"
+                page = when (page) {
+                    "account" -> "intro"
+                    "intro" -> "intro"
+                    "detail" -> previousPage
+                    else -> "home"
+                }
             }
 
             BuscadorApp(
@@ -105,12 +110,6 @@ class MainActivity : ComponentActivity() {
                 onPage = { page = it },
                 onFinishIntro = {
                     AuthSessionStore.markOnboardingDone(this)
-                    page = "home"
-                },
-                onSignedIn = { session ->
-                    AuthSessionStore.write(this, session)
-                    AuthSessionStore.markOnboardingDone(this)
-                    currentSession = session
                     page = "home"
                 },
                 onSignOut = {

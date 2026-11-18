@@ -11,13 +11,13 @@ android {
         applicationId = "com.flaviodelacruz.buscador"
         minSdk = 26
         targetSdk = 35
-        versionCode = 8
-        versionName = "2.1.0"
+        versionCode = 9
+        versionName = "2.2.0"
     }
     buildTypes {
         debug {
             // Side-by-side trial: do not overwrite previous Expo or Kotlin debug archives.
-            applicationIdSuffix = ".welcome"
+            applicationIdSuffix = ".nyvara"
             versionNameSuffix = "-debug"
             resValue("string", "app_name", "Buscador")
         }
