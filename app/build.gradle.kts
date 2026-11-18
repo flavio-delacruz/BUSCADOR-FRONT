@@ -17,9 +17,9 @@ android {
     buildTypes {
         debug {
             // Side-by-side trial: do not overwrite previous Expo or Kotlin debug archives.
-            applicationIdSuffix = ".sync"
+            applicationIdSuffix = ".autosync"
             versionNameSuffix = "-debug"
-            resValue("string", "app_name", "Buscador Sync (prueba)")
+            resValue("string", "app_name", "Buscador Auto (prueba)")
         }
         release {
             resValue("string", "app_name", "Buscador")
@@ -50,6 +50,6 @@ dependencies {
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
     implementation("androidx.compose.foundation:foundation")
-    implementation("androidx.compose.animation:animation")
+    implementation("androidx.compose.animation:animation")\n    implementation("androidx.work:work-runtime-ktx:2.12.0")
     debugImplementation("androidx.compose.ui:ui-tooling")
 }
