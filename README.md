@@ -30,11 +30,11 @@ gradle :app:assembleDebug
 
 Para obtener una APK sin Android Studio ni EAS:
 GitHub Actions → **Kotlin Android APK** → Artifacts →
-**Buscador-Kotlin-Debug-APK**.
+**Buscador** → descarga el ZIP, extrae **Buscador.apk**.
 
 ## Importante sobre la instalación
 La compilación **debug** utiliza el paquete
-`com.flaviodelacruz.buscador.autosync` y aparece como **Buscador Auto (prueba)**:
+`com.flaviodelacruz.buscador.autosync` y aparece como **Buscador**:
 puede instalarse junto a la app anterior de Expo y la APK Kotlin de prueba sin desinstalarlas. La nueva instalación comienza con un archivo local vacío y debes autorizar su propio acceso a notificaciones.
 La compilación de **producción** conserva el applicationId
 `com.flaviodelacruz.buscador`, pero la APK
