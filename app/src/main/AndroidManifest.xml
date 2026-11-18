@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- The app only uses network access when the user explicitly exports their archive. -->
+    <!-- Network access is used only after separate, explicit remote-sync opt-in. -->
     <uses-permission android:name="android.permission.INTERNET" />
     <!-- Only the user can grant this special access in Android Settings. -->
     <application
