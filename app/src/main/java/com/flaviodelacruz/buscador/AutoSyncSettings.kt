@@ -142,7 +142,7 @@ internal object AutoSyncSettings {
             known.addAll(ids)
             // The local archive holds at most 500 records.
             if (known.size > MAX_IDS) {
-                val keep = known.takeLast(MAX_IDS).toSet()
+                val keep = known.toList().takeLast(MAX_IDS).toSet()
                 known.clear()
                 known.addAll(keep)
             }
