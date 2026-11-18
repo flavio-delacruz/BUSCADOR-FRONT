@@ -54,16 +54,18 @@ internal object AuthSessionStore {
         cipher.init(Cipher.DECRYPT_MODE, key(), GCMParameterSpec(128, bytes.copyOfRange(1, 13)))
         return String(cipher.doFinal(bytes.copyOfRange(13, bytes.size)), Charsets.UTF_8)
     }
-    fun read(ctx: Context): BuscadorSession? = try {
-        val raw = prefs(ctx).getString("session", null) ?: return null
-        val json = JSONObject(decrypt(raw))
-        val session = BuscadorSession(
-            json.getString("email"), json.getString("baseUrl"),
-            json.getString("token"), json.getLong("expiresAt")
-        )
-        if (session.expiresAt > System.currentTimeMillis()) session else null
-    } catch (_: Exception) {
-        null
+    fun read(ctx: Context): BuscadorSession? {
+        return try {
+            val raw = prefs(ctx).getString("session", null) ?: return null
+            val json = JSONObject(decrypt(raw))
+            val session = BuscadorSession(
+                json.getString("email"), json.getString("baseUrl"),
+                json.getString("token"), json.getLong("expiresAt")
+            )
+            if (session.expiresAt > System.currentTimeMillis()) session else null
+        } catch (_: Exception) {
+            null
+        }
     }
     fun write(ctx: Context, session: BuscadorSession) {
         val json = JSONObject()
