@@ -14,7 +14,8 @@ import javax.crypto.spec.GCMParameterSpec
 
 /**
  * The archive stays on this device. The Android Keystore key is not exportable.
- * Remote sync, when explicitly enabled, reads already encrypted local records and\n * sends eligible new entries via the authorized HTTPS worker. Never embed secrets here.
+ * Remote sync, when explicitly enabled, reads already encrypted local records and
+ * sends eligible new entries via the authorized HTTPS worker. Never embed secrets here.
  */
 internal object NotificationArchiveStore {
   private val lock = Any()
