@@ -72,7 +72,6 @@ fun BuscadorApp(
     article: Article,
     onPage: (String) -> Unit,
     onFinishIntro: () -> Unit,
-    onSignedIn: (BuscadorSession) -> Unit,
     onSignOut: () -> Unit,
     onArticle: (String) -> Unit,
     onFavorite: (String) -> Unit,
@@ -90,8 +89,11 @@ fun BuscadorApp(
         Column(Modifier.fillMaxSize().background(Ink).safeDrawingPadding()) {
             Box(Modifier.weight(1f)) {
                 when (page) {
-                    "intro" -> IntroExperience(onFinishIntro, onSignedIn)
-                    "account" -> AccountEntry(onFinishIntro, onSignedIn, showGuest = true)
+                    "intro" -> NyvaraSixIntro(onDone = { onPage("account") })
+                    "account" -> NyvaraMockLogin(
+                        onBack = { onPage("intro") },
+                        onGuest = onFinishIntro
+                    )
                     "welcome" -> WelcomeScreen(status, error, onConsent, onSkip)
                     "home" -> TodayScreen(status, onPage, onArticle)
                     "radar" -> RadarScreen(onArticle)
@@ -250,7 +252,7 @@ fun ArticleCard(article: Article, saved: Boolean = false, onOpen: () -> Unit, on
 fun TodayScreen(status: ArchiveSnapshot, onPage: (String) -> Unit, onArticle: (String) -> Unit) {
     ScrollPage {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            BuscadorMark()
+            NyvaraLogoBadge()
             Spacer(Modifier.width(13.dp))
             Column {
                 Label("BUSCADOR / TU EDICIÓN PERSONAL")
@@ -279,7 +281,7 @@ fun TodayScreen(status: ArchiveSnapshot, onPage: (String) -> Unit, onArticle: (S
                     .background(Color(0xFF2C1826), RoundedCornerShape(15.dp)),
                 contentAlignment = Alignment.Center
             ) {
-                Text("B.  /  001", color = Red, fontWeight = FontWeight.Black, fontSize = 53.sp)
+                NyvaraApprovedLogo(side = 138.dp)
             }
             Spacer(Modifier.height(16.dp))
             Label("TECNOLOGÍA / FUTURO CERCANO")
@@ -332,7 +334,7 @@ fun RadarScreen(onArticle: (String) -> Unit) {
                     drawCircle(Cyan, size.minDimension * 0.025f, center = androidx.compose.ui.geometry.Offset(center.x * 1.42f, center.y * 0.75f))
                     drawCircle(Lilac, size.minDimension * 0.025f, center = androidx.compose.ui.geometry.Offset(center.x * 0.85f, center.y * 1.68f))
                 }
-                Text("B", color = Red, fontWeight = FontWeight.Black, fontSize = 45.sp)
+                NyvaraApprovedLogo(side = 104.dp)
             }
             BodyText("Visualización ilustrativa; no usa datos de seguimiento.", Soft)
         }
@@ -445,7 +447,7 @@ fun SettingsScreen(status: ArchiveSnapshot, session: BuscadorSession?, onPage: (
     ScrollPage("Mi espacio", "LA EXPERIENCIA BUSCADOR") {
         SurfacePanel {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                BuscadorMark()
+                NyvaraLogoBadge()
                 Spacer(Modifier.width(16.dp))
                 Column {
                     Text("Buscador", color = White, fontSize = 23.sp, fontWeight = FontWeight.Black)
@@ -474,6 +476,10 @@ fun SettingsScreen(status: ArchiveSnapshot, session: BuscadorSession?, onPage: (
             BodyText("La captura local y la sincronización consentida se gestionan por separado.", Soft)
         }
         Spacer(Modifier.height(22.dp))
+        Text("VER LAS 6 PANTALLAS DE NYVARA  ↗",
+            color = Red, fontWeight = FontWeight.Black, fontSize = 12.sp,
+            modifier = Modifier.clickable { onPage("intro") }.padding(vertical = 10.dp))
+        Spacer(Modifier.height(8.dp))
         Text("Privacidad y transparencia", color = White, fontWeight = FontWeight.Black, fontSize = 21.sp)
         Spacer(Modifier.height(12.dp))
         SurfacePanel(Modifier.clickable { onPage("notifications") }) {
