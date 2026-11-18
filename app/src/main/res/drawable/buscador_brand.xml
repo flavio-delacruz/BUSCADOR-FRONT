@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Deep ink foundation and crimson monogram. -->
+    <path
+        android:fillColor="#14121D"
+        android:pathData="M24,0 L84,0 Q108,0 108,24 L108,84 Q108,108 84,108 L24,108 Q0,108 0,84 L0,24 Q0,0 24,0 Z"/>
+    <path
+        android:fillColor="#FF3859"
+        android:fillType="evenOdd"
+        android:pathData="M28,17 L53,17 C73,17 82,28 82,41 C82,48 78,53 72,56 C83,61 87,68 87,77 C87,93 75,98 53,98 L28,98 Z
+                          M44,30 L44,49 L54,49 C61,49 66,45 66,39 C66,33 61,30 54,30 Z
+                          M44,63 L44,85 L55,85 C65,85 70,81 70,74 C70,67 65,63 55,63 Z"/>
+    <!-- Magnifying lens is the brand's white counterpoint. -->
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="4.5"
+        android:strokeLineCap="round"
+        android:pathData="M68,69 a11,11 0,1 1,0 22 a11,11 0,1 1,0 -22"/>
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="4.5"
+        android:strokeLineCap="round"
+        android:pathData="M76,88 L85,97"/>
+</vector>

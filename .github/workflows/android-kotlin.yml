@@ -1,7 +1,7 @@
 name: Kotlin Android APK
 on:
   push:
-    branches: [main, feat/kotlin-native-migration]
+    branches: [main, feat/kotlin-native-migration, feat/six-screen-auth-redesign]
   pull_request:
   workflow_dispatch:
 permissions:

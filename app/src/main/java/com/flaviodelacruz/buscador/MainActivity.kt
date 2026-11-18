@@ -8,6 +8,9 @@ import android.service.notification.NotificationListenerService
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -37,6 +40,7 @@ class MainActivity : ComponentActivity() {
     private var snapshot by mutableStateOf(ArchiveSnapshot())
     private var records by mutableStateOf<List<Map<String, Any>>>(emptyList())
     private var archiveError by mutableStateOf<String?>(null)
+    private var currentSession by mutableStateOf<BuscadorSession?>(null)
 
     private fun accessGranted(): Boolean {
         val target = ComponentName(this, BuscadorNotificationListener::class.java)
@@ -75,7 +79,8 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         reload()
-        val initial = if (NotificationArchiveStore.setupFinished(this)) "home" else "welcome"
+        currentSession = AuthSessionStore.read(this)
+        val initial = if (AuthSessionStore.onboardingDone(this)) "home" else "intro"
         setContent {
             var page by rememberSaveable { mutableStateOf(initial) }
             var detailId by rememberSaveable { mutableStateOf("1") }
@@ -91,12 +96,33 @@ class MainActivity : ComponentActivity() {
 
             BuscadorApp(
                 page = page,
+                session = currentSession,
                 status = snapshot,
                 records = records,
                 error = archiveError,
                 favorites = favorites,
                 article = articles.firstOrNull { it.id == detailId } ?: articles.first(),
                 onPage = { page = it },
+                onFinishIntro = {
+                    AuthSessionStore.markOnboardingDone(this)
+                    page = "home"
+                },
+                onSignedIn = { session ->
+                    AuthSessionStore.write(this, session)
+                    AuthSessionStore.markOnboardingDone(this)
+                    currentSession = session
+                    page = "home"
+                },
+                onSignOut = {
+                    val previous = currentSession
+                    AuthSessionStore.clear(this)
+                    currentSession = null
+                    // The notification archive and remote-sync opt-in are separate.
+                    // Signing out never deletes the local archive or silently revokes sync.
+                    if (previous != null) lifecycleScope.launch(Dispatchers.IO) {
+                        runCatching { AuthClient.logout(previous) }
+                    }
+                },
                 onArticle = { id ->
                     previousPage = if (page == "detail") "home" else page
                     detailId = id

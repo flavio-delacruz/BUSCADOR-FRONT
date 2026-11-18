@@ -64,12 +64,16 @@ val Lilac = Color(0xFFC8A5FA)
 @Composable
 fun BuscadorApp(
     page: String,
+    session: BuscadorSession?,
     status: ArchiveSnapshot,
     records: List<Map<String, Any>>,
     error: String?,
     favorites: Set<String>,
     article: Article,
     onPage: (String) -> Unit,
+    onFinishIntro: () -> Unit,
+    onSignedIn: (BuscadorSession) -> Unit,
+    onSignOut: () -> Unit,
     onArticle: (String) -> Unit,
     onFavorite: (String) -> Unit,
     onConsent: () -> Unit,
@@ -86,12 +90,14 @@ fun BuscadorApp(
         Column(Modifier.fillMaxSize().background(Ink).safeDrawingPadding()) {
             Box(Modifier.weight(1f)) {
                 when (page) {
+                    "intro" -> IntroExperience(onFinishIntro, onSignedIn)
+                    "account" -> AccountEntry(onFinishIntro, onSignedIn, showGuest = true)
                     "welcome" -> WelcomeScreen(status, error, onConsent, onSkip)
                     "home" -> TodayScreen(status, onPage, onArticle)
                     "radar" -> RadarScreen(onArticle)
                     "search" -> ExploreScreen(onArticle)
                     "saved" -> SavedScreen(favorites, onArticle, onPage, onFavorite)
-                    "settings" -> SettingsScreen(status, onPage)
+                    "settings" -> SettingsScreen(status, session, onPage, onSignOut)
                     "notifications" -> NotificationCenterScreen(
                         status, records, error, { onPage("home") }, onConsent,
                         onOpenAccess, onStopCapture, onSourceChange, onClear, onRefresh
@@ -243,8 +249,15 @@ fun ArticleCard(article: Article, saved: Boolean = false, onOpen: () -> Unit, on
 @Composable
 fun TodayScreen(status: ArchiveSnapshot, onPage: (String) -> Unit, onArticle: (String) -> Unit) {
     ScrollPage {
-        Label("BUSCADOR / TU EDICIÓN PERSONAL")
-        Spacer(Modifier.height(12.dp))
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            BuscadorMark()
+            Spacer(Modifier.width(13.dp))
+            Column {
+                Label("BUSCADOR / TU EDICIÓN PERSONAL")
+                Text("DESCUBRE MÁS CADA DÍA", color = Soft, fontSize = 10.sp, letterSpacing = 1.sp)
+            }
+        }
+        Spacer(Modifier.height(18.dp))
         Headline("Mira más allá\ndel titular.")
         Spacer(Modifier.height(21.dp))
         SurfacePanel(Modifier.clickable { onPage("notifications") }) {
@@ -428,14 +441,11 @@ fun SavedScreen(favorites: Set<String>, onArticle: (String) -> Unit, onPage: (St
 }
 
 @Composable
-fun SettingsScreen(status: ArchiveSnapshot, onPage: (String) -> Unit) {
+fun SettingsScreen(status: ArchiveSnapshot, session: BuscadorSession?, onPage: (String) -> Unit, onSignOut: () -> Unit) {
     ScrollPage("Mi espacio", "LA EXPERIENCIA BUSCADOR") {
         SurfacePanel {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Box(
-                    Modifier.size(65.dp).background(Color(0xFF281927), RoundedCornerShape(20.dp)),
-                    contentAlignment = Alignment.Center
-                ) { Text("B.", color = Red, fontSize = 31.sp, fontWeight = FontWeight.Black) }
+                BuscadorMark()
                 Spacer(Modifier.width(16.dp))
                 Column {
                     Text("Buscador", color = White, fontSize = 23.sp, fontWeight = FontWeight.Black)
@@ -445,6 +455,25 @@ fun SettingsScreen(status: ArchiveSnapshot, onPage: (String) -> Unit) {
             }
         }
         Spacer(Modifier.height(25.dp))
+        Text("Mi cuenta", color = White, fontWeight = FontWeight.Black, fontSize = 21.sp)
+        Spacer(Modifier.height(12.dp))
+        SurfacePanel {
+            Label(if (session == null) "MODO INVITADO" else "SESIÓN INICIADA", Cyan)
+            Spacer(Modifier.height(8.dp))
+            Text(session?.email ?: "Explora sin cuenta", color = White, fontSize = 16.sp, fontWeight = FontWeight.Bold)
+            Spacer(Modifier.height(10.dp))
+            if (session == null) {
+                Text("INICIAR SESIÓN O CREAR CUENTA   ↗",
+                    color = Red, fontSize = 11.sp, fontWeight = FontWeight.Black,
+                    modifier = Modifier.clickable { onPage("account") }.padding(vertical = 8.dp))
+            } else {
+                Text("CERRAR SESIÓN",
+                    color = Red, fontSize = 11.sp, fontWeight = FontWeight.Black,
+                    modifier = Modifier.clickable { onSignOut() }.padding(vertical = 8.dp))
+            }
+            BodyText("La captura local y la sincronización consentida se gestionan por separado.", Soft)
+        }
+        Spacer(Modifier.height(22.dp))
         Text("Privacidad y transparencia", color = White, fontWeight = FontWeight.Black, fontSize = 21.sp)
         Spacer(Modifier.height(12.dp))
         SurfacePanel(Modifier.clickable { onPage("notifications") }) {
